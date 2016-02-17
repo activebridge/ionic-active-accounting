@@ -1,4 +1,5 @@
 {
   "name": "active-accounting-ionic",
-  "app_id": "37dcc2d4"
+  "app_id": "37dcc2d4",
+  "gulpStartupTasks": ["sass", "watch"]
 }
