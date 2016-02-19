@@ -1,18 +1,30 @@
 <ion-view view-title="Active accounting for vendors" name="login-view">
   <ion-content class="padding">
+	  <form name='loginForm' novalidate>
       <div class="list list-inset">
-          <label class="item item-input">
-              <input type="text" placeholder="Email">
-          </label>
-          <label class="item item-input">
-              <input type="password" placeholder="Password">
-          </label>
+        <label class="item item-input">
+          <input type="email" placeholder="Email" ng-model='vendor.email' name='email' required>
+        </label>
+
+        <label class="item item-input">
+          <input type="password" placeholder="Password" ng-model='vendor.password' name='password' required>
+        </label>
       </div>
-      <button class="button button-block button-calm" ui-sref="/vendor_login">Sign in</button>
+
+      <div class="padding">
+        <p class="text-red" ng-show="loginForm.email.$error.required">* Email is required</p>
+        <p class="text-red" ng-show="loginForm.email.$invalid && !loginForm.email.$pristine">* Email is invalid</p>
+        <p class="text-red" ng-show="loginForm.password.$error.required">* Password is required</p>
+      </div>
+
+      <button ng-click='login();' ng-disabled="loginForm.$invalid" class="button button-block button-positive">
+        Login
+      </button>
 
       <button class="button button-block button-dark">
         Forgot your password?
       </button>
+    </form>
 
   </ion-content>
 </ion-view>

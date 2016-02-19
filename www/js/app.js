@@ -23,13 +23,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 app.controller('loginCtrl', [
   '$scope', 'Vendor', function($scope, Vendor) {
-    return Vendor.save();
+    $scope.vendor = {};
+    return $scope.submit = function() {
+      return Vendor.save($scope.vendor, function(response) {
+        return console.log(response);
+      });
+    };
   }
 ]);
 
 angular.module('active-accounting').factory('Vendor', [
   '$resource', function($resource) {
-    return $resource('/api/vendor_login/:id', {
+    return $resource('/api/vendor_login/:id.json', {
       id: '@id'
     }, {
       update: {
@@ -38,3 +43,5 @@ angular.module('active-accounting').factory('Vendor', [
     });
   }
 ]);
+
+

@@ -2,5 +2,11 @@ app.controller 'loginCtrl', [
   '$scope'
   'Vendor'
   ($scope, Vendor) ->
-    Vendor.save()
+    $scope.vendor = {}
+#
+    $scope.submit = ->
+      Vendor.save($scope.vendor,
+        (response)->
+          console.log response
+      )
 ]
