@@ -6,6 +6,7 @@
     "ionic-platform-web-client": "^0.2.1"
   },
   "dependencies": {
-    "angular-resource": "^1.5.0"
+    "angular-resource": "^1.5.0",
+    "satellizer": "^0.13.4"
   }
 }
