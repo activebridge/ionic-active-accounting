@@ -7,12 +7,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
 
   $stateProvider.state 'login', {
     url: '/login'
-    templateUrl: 'templates/login.html',
+    templateUrl: 'templates/login.html'
     controller: 'loginCtrl'
   }
   .state 'vendor_profile', {
-    url: '/vendor_profile',
-    abstract: true,
+    url: '/vendor_profile'
+    abstract: true
     templateUrl: 'templates/vendor_profile.html'
   }
   .state 'vendor_profile.hours', {
@@ -32,4 +32,9 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     views: 'holidays-tab':
       templateUrl: 'templates/holidays.html'
       controller: 'HolidaysCtrl'
+  }
+  .state 'vendor_password_reset', {
+    url: 'vendor_password_reset/new'
+    templateUrl: 'templates/vendor_password_reset.html'
+    controller: 'VendorPasswordResetCtrl'
   }

@@ -16,12 +16,16 @@
       <p class="text-red" ng-show="loginForm.password.$error.required">* Password is required</p>
 
       <button ng-click='submit()' ng-disabled="loginForm.$invalid" class="button button-block button-balanced">
-        Login
+        Sign in
       </button>
 
-      <button class="button button-block button-dark">
-        Forgot your password?
+      <button class="button button-block button-dark" ui-sref="vendor_password_reset">
+          Forgot your password?
       </button>
+
+      <p class="text-center">
+        <a href="#">Admin panel</a>
+      </p>
     </form>
 
   </ion-content>

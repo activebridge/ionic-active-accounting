@@ -48,6 +48,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         controller: 'HolidaysCtrl'
       }
     }
+  }).state('vendor_password_reset', {
+    url: 'vendor_password_reset/new',
+    templateUrl: 'templates/vendor_password_reset.html',
+    controller: 'VendorPasswordResetCtrl'
   });
 });
 
@@ -76,6 +80,12 @@ app.controller('CalcCtrl', [
 app.controller('HolidaysCtrl', [
   '$scope', function($scope) {
     return console.log("I'm in holidays controller");
+  }
+]);
+
+app.controller('VendorPasswordResetCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in vendor password reset controller");
   }
 ]);
 

@@ -27,3 +27,9 @@ app.controller 'HolidaysCtrl', [
   ($scope) ->
     console.log "I'm in holidays controller"
 ]
+
+app.controller 'VendorPasswordResetCtrl', [
+  '$scope'
+  ($scope) ->
+    console.log "I'm in vendor password reset controller"
+]
