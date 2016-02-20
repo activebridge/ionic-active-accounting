@@ -15,11 +15,11 @@ app = angular.module('active-accounting', ['ionic', 'ngResource']).run(function(
 app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
-  $urlRouterProvider.otherwise('/login');
-  return $stateProvider.state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'loginCtrl'
+  $urlRouterProvider.otherwise('/vendor_login');
+  return $stateProvider.state('vendor_login', {
+    url: '/vendor_login',
+    templateUrl: 'templates/vendor_login.html',
+    controller: 'VendorLoginCtrl'
   }).state('vendor_profile', {
     url: '/vendor_profile',
     abstract: true,
@@ -55,7 +55,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   });
 });
 
-app.controller('loginCtrl', [
+app.controller('VendorLoginCtrl', [
   '$scope', '$state', 'Vendor', function($scope, $state, Vendor) {
     $scope.vendor = {};
     return $scope.submit = function() {

@@ -3,12 +3,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   $ionicConfigProvider.tabs.position 'bottom'
   $ionicConfigProvider.navBar.alignTitle 'center'
 
-  $urlRouterProvider.otherwise '/login'
+  $urlRouterProvider.otherwise '/vendor_login'
 
-  $stateProvider.state 'login', {
-    url: '/login'
-    templateUrl: 'templates/login.html'
-    controller: 'loginCtrl'
+  $stateProvider.state 'vendor_login', {
+    url: '/vendor_login'
+    templateUrl: 'templates/vendor_login.html'
+    controller: 'VendorLoginCtrl'
   }
   .state 'vendor_profile', {
     url: '/vendor_profile'

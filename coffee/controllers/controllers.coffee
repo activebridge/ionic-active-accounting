@@ -1,4 +1,4 @@
-app.controller 'loginCtrl', [
+app.controller 'VendorLoginCtrl', [
   '$scope'
   '$state'
   'Vendor'
