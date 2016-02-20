@@ -12,23 +12,70 @@ app = angular.module('active-accounting', ['ionic', 'ngResource']).run(function(
   });
 });
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.navBar.alignTitle('center');
   $urlRouterProvider.otherwise('/login');
   return $stateProvider.state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
+  }).state('vendor_profile', {
+    url: '/vendor_profile',
+    abstract: true,
+    templateUrl: 'templates/vendor_profile.html'
+  }).state('vendor_profile.hours', {
+    url: '/vendor_profile/hours',
+    views: {
+      'hours-tab': {
+        templateUrl: 'templates/hours.html',
+        controller: 'HoursCtrl'
+      }
+    }
+  }).state('vendor_profile.calc', {
+    url: '/vendor_profile/calc',
+    views: {
+      'calc-tab': {
+        templateUrl: 'templates/calc.html',
+        controller: 'CalcCtrl'
+      }
+    }
+  }).state('vendor_profile.holidays', {
+    url: '/vendor_profile/our-holidays',
+    views: {
+      'holidays-tab': {
+        templateUrl: 'templates/holidays.html',
+        controller: 'HolidaysCtrl'
+      }
+    }
   });
 });
 
 app.controller('loginCtrl', [
-  '$scope', 'Vendor', function($scope, Vendor) {
+  '$scope', '$state', 'Vendor', function($scope, $state, Vendor) {
     $scope.vendor = {};
     return $scope.submit = function() {
-      return Vendor.save($scope.vendor, function(response) {
-        return console.log(response);
-      });
+      Vendor.save($scope.vendor);
+      return $state.go('vendor_profile.hours');
     };
+  }
+]);
+
+app.controller('HoursCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in hours controller");
+  }
+]);
+
+app.controller('CalcCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in calc controller");
+  }
+]);
+
+app.controller('HolidaysCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in holidays controller");
   }
 ]);
 

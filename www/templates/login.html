@@ -1,4 +1,4 @@
-<ion-view view-title="Active accounting for vendors" name="login-view">
+<ion-view view-title="Active accounting for vendors">
   <ion-content class="padding">
 	  <form name='loginForm' novalidate>
       <div class="list list-inset">
@@ -11,13 +11,11 @@
         </label>
       </div>
 
-      <div class="padding">
-        <p class="text-red" ng-show="loginForm.email.$error.required">* Email is required</p>
-        <p class="text-red" ng-show="loginForm.email.$invalid && !loginForm.email.$pristine">* Email is invalid</p>
-        <p class="text-red" ng-show="loginForm.password.$error.required">* Password is required</p>
-      </div>
+      <p class="text-red" ng-show="loginForm.email.$error.required">* Email is required</p>
+      <p class="text-red" ng-show="loginForm.email.$invalid && !loginForm.email.$pristine">* Email is invalid</p>
+      <p class="text-red" ng-show="loginForm.password.$error.required">* Password is required</p>
 
-      <button ng-click='login();' ng-disabled="loginForm.$invalid" class="button button-block button-positive">
+      <button ng-click='submit()' ng-disabled="loginForm.$invalid" class="button button-block button-balanced">
         Login
       </button>
 
