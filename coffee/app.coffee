@@ -14,3 +14,9 @@ app = angular.module('active-accounting', [ 'ionic', 'ngResource', 'satellizer' 
       cordova.plugins.Keyboard.disableScroll true
     if window.StatusBar
       StatusBar.styleDefault()
+
+app.run ($rootScope, $auth, $state) ->
+  $rootScope.$on '$stateChangeStart', (event, toState) ->
+    if toState.requireAuth and !$auth.isAuthenticated()
+      event.preventDefault()
+      $state.go('vendor_login')

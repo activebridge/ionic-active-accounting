@@ -4,6 +4,7 @@ app.controller 'VendorLoginCtrl', [
   '$auth'
   '$ionicPopup'
   ($scope, $state, $auth, $ionicPopup) ->
+
     $scope.vendor = {}
 
     $scope.submit = ->
@@ -45,6 +46,10 @@ app.controller 'VendorProfileCtrl', [
   '$auth'
   '$ionicPopup'
   ($scope, $state, $auth, $ionicPopup) ->
+
+    $scope.isAuthenticated = ->
+      $auth.isAuthenticated()
+
     $scope.logout = ->
       $auth.logout().then ->
         $state.go 'vendor_login'

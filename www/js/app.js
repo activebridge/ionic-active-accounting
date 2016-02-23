@@ -12,6 +12,15 @@ app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer'])
   });
 });
 
+app.run(function($rootScope, $auth, $state) {
+  return $rootScope.$on('$stateChangeStart', function(event, toState) {
+    if (toState.requireAuth && !$auth.isAuthenticated()) {
+      event.preventDefault();
+      return $state.go('vendor_login');
+    }
+  });
+});
+
 app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
@@ -26,29 +35,32 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     templateUrl: 'templates/vendor_profile.html',
     controller: 'VendorProfileCtrl'
   }).state('vendor_profile.hours', {
-    url: '/vendor_profile/hours',
+    url: '/hours',
     views: {
       'hours-tab': {
         templateUrl: 'templates/hours.html',
         controller: 'HoursCtrl'
       }
-    }
+    },
+    requireAuth: true
   }).state('vendor_profile.calc', {
-    url: '/vendor_profile/calc',
+    url: '/calc',
     views: {
       'calc-tab': {
         templateUrl: 'templates/calc.html',
         controller: 'CalcCtrl'
       }
-    }
+    },
+    requireAuth: true
   }).state('vendor_profile.holidays', {
-    url: '/vendor_profile/our-holidays',
+    url: '/our-holidays',
     views: {
       'holidays-tab': {
         templateUrl: 'templates/holidays.html',
         controller: 'HolidaysCtrl'
       }
-    }
+    },
+    requireAuth: true
   }).state('vendor_password_reset', {
     url: 'vendor_password_reset/new',
     templateUrl: 'templates/vendor_password_reset.html',
@@ -115,6 +127,9 @@ app.controller('VendorPasswordResetCtrl', [
 
 app.controller('VendorProfileCtrl', [
   '$scope', '$state', '$auth', '$ionicPopup', function($scope, $state, $auth, $ionicPopup) {
+    $scope.isAuthenticated = function() {
+      return $auth.isAuthenticated();
+    };
     return $scope.logout = function() {
       return $auth.logout().then(function() {
         return $state.go('vendor_login');
