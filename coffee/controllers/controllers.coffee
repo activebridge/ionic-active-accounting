@@ -1,13 +1,18 @@
 app.controller 'VendorLoginCtrl', [
   '$scope'
   '$state'
-  'Vendor'
-  ($scope, $state, Vendor) ->
+  '$auth'
+  '$ionicPopup'
+  ($scope, $state, $auth, $ionicPopup) ->
     $scope.vendor = {}
-#
+
     $scope.submit = ->
-      Vendor.save $scope.vendor
-      $state.go 'vendor_profile.hours'
+      $auth.login($scope.vendor).then((response) ->
+        $state.go 'vendor_profile.hours'
+      )['catch'] (error) ->
+        alertPopup = $ionicPopup.alert(
+          title: 'Login failed!'
+          template: 'Please check your credentials!')
 ]
 
 app.controller 'HoursCtrl', [
@@ -32,4 +37,15 @@ app.controller 'VendorPasswordResetCtrl', [
   '$scope'
   ($scope) ->
     console.log "I'm in vendor password reset controller"
+]
+
+app.controller 'VendorProfileCtrl', [
+  '$scope'
+  '$state'
+  '$auth'
+  '$ionicPopup'
+  ($scope, $state, $auth, $ionicPopup) ->
+    $scope.logout = ->
+      $auth.logout().then ->
+        $state.go 'vendor_login'
 ]

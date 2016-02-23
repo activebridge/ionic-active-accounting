@@ -14,6 +14,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     url: '/vendor_profile'
     abstract: true
     templateUrl: 'templates/vendor_profile.html'
+    controller: 'VendorProfileCtrl'
   }
   .state 'vendor_profile.hours', {
     url: '/vendor_profile/hours'
