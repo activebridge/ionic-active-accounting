@@ -42,3 +42,20 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     templateUrl: 'templates/vendor_password_reset.html'
     controller: 'VendorPasswordResetCtrl'
   }
+  .state 'admin_login', {
+    url: '/admin_login'
+    templateUrl: 'templates/admin_login.html'
+    controller: 'AdminLoginCtrl'
+  }
+  .state 'admin', {
+    url: '/admin'
+    abstract: true
+    templateUrl: 'templates/admin.html'
+    controller: 'AdminCtrl'
+  }
+  .state 'admin.home', {
+    url: '/home'
+    views: 'home-tab':
+      templateUrl: 'templates/home.html'
+      controller: 'HomeCtrl'
+  }

@@ -16,6 +16,14 @@ app.controller 'VendorLoginCtrl', [
           template: 'Please check your credentials!')
 ]
 
+app.controller 'AdminLoginCtrl', [
+  '$scope'
+  '$state'
+  '$ionicPopup'
+  ($scope, $state, $ionicPopup) ->
+
+]
+
 app.controller 'HoursCtrl', [
   '$scope'
   ($scope) ->

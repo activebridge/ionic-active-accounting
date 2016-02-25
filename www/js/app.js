@@ -1,6 +1,6 @@
 var app;
 
-app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer']).run(function($ionicPlatform) {
+app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer', 'Devise']).run(function($ionicPlatform) {
   return $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -65,8 +65,27 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     url: 'vendor_password_reset/new',
     templateUrl: 'templates/vendor_password_reset.html',
     controller: 'VendorPasswordResetCtrl'
+  }).state('admin_login', {
+    url: '/admin_login',
+    templateUrl: 'templates/admin_login.html',
+    controller: 'AdminLoginCtrl'
+  }).state('admin', {
+    url: '/admin',
+    abstract: true,
+    templateUrl: 'templates/admin.html',
+    controller: 'AdminCtrl'
+  }).state('admin.home', {
+    url: '/home',
+    views: {
+      'home-tab': {
+        templateUrl: 'templates/home.html',
+        controller: 'HomeCtrl'
+      }
+    }
   });
 });
+
+app.constant('apiEndpoint', 'http://localhost:3000');
 
 app.config([
   '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
@@ -81,8 +100,6 @@ app.config([
     return $authProvider.cordova = true;
   }
 ]);
-
-app.constant('apiEndpoint', 'http://localhost:3000');
 
 app.controller('VendorLoginCtrl', [
   '$scope', '$state', '$auth', '$ionicPopup', function($scope, $state, $auth, $ionicPopup) {
@@ -100,6 +117,8 @@ app.controller('VendorLoginCtrl', [
     };
   }
 ]);
+
+app.controller('AdminLoginCtrl', ['$scope', '$state', '$ionicPopup', function($scope, $state, $ionicPopup) {}]);
 
 app.controller('HoursCtrl', [
   '$scope', function($scope) {
