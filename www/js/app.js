@@ -263,8 +263,29 @@ app.controller('HolidaysCtrl', [
 ]);
 
 app.controller('HoursCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in hours controller");
+  '$scope', 'Hours', 'Counterparty', '$localStorage', function($scope, Hours, Counterparty, $localStorage) {
+    var init;
+    $scope.hour = {};
+    $scope.hour.errors = {};
+    $scope.customers = Counterparty.customers({
+      scope: 'active'
+    });
+    init = function() {
+      $scope.vendor = $localStorage.currentVendor;
+      return $scope.hours = Hours.query({
+        vendor_id: $scope.vendor.id
+      });
+    };
+    $scope.add = function() {
+      var hour;
+      return hour = Hours.save($scope.hour, function() {
+        $scope.hours.push(hour);
+        return $scope.hour.errors = [];
+      }, function(response) {
+        return $scope.hour.errors = response.data.error;
+      });
+    };
+    return init();
   }
 ]);
 
@@ -337,11 +358,12 @@ app.controller('RegisterNewCtrl', [
 ]);
 
 app.controller('VendorLoginCtrl', [
-  '$scope', '$state', '$auth', '$ionicPopup', function($scope, $state, $auth, $ionicPopup) {
+  '$scope', '$state', '$auth', '$ionicPopup', '$localStorage', function($scope, $state, $auth, $ionicPopup, $localStorage) {
     $scope.vendor = {};
     return $scope.submit = function() {
       return $auth.login($scope.vendor).then(function(response) {
-        return $state.go('vendor_profile.hours');
+        $state.go('vendor_profile.hours');
+        return $localStorage.currentVendor = response.data;
       })['catch'](function(error) {
         var alertPopup;
         return alertPopup = $ionicPopup.alert({
@@ -372,19 +394,7 @@ app.controller('VendorProfileCtrl', [
   }
 ]);
 
-angular.module('active-accounting').factory('Counterparty', [
-  '$resource', function($resource) {
-    return $resource('/api/counterparties/:id', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-angular.module('active-accounting').factory('Register', [
+app.factory('Register', [
   '$resource', function($resource) {
     return $resource('/api/registers/:id', {
       id: '@id'
@@ -396,9 +406,21 @@ angular.module('active-accounting').factory('Register', [
   }
 ]);
 
-angular.module('active-accounting').factory('Article', [
+app.factory('Article', [
   '$resource', function($resource) {
     return $resource('/api/articles/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Vendor', [
+  '$resource', function($resource) {
+    return $resource('/api/vendor_login/:id.json', {
       id: '@id'
     }, {
       update: {
@@ -417,6 +439,41 @@ app.factory('Tax', [
         url: '/api/tax/edit',
         method: 'GET',
         isArray: false
+      }
+    });
+  }
+]);
+
+app.factory('Hours', [
+  '$resource', function($resource) {
+    return $resource('/api/hours/:id/:action', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Counterparty', [
+  '$resource', function($resource) {
+    return $resource('/api/counterparties/:id/:action', {
+      id: '@id'
+    }, {
+      payments: {
+        method: 'GET',
+        params: {
+          action: 'payments'
+        },
+        isArray: true
+      },
+      customers: {
+        method: 'GET',
+        params: {
+          action: 'customers'
+        },
+        isArray: true
       },
       update: {
         method: 'PUT'

@@ -1,0 +1,40 @@
+<ion-view view-title="Management own hours">
+  <ion-content class="padding">
+    <form name='hoursForm' novalidate>
+      <div class="list list-inset">
+
+        <label class="item item-select">
+          <div class="assertive">{{ hour.errors.customer_id[0] }}</div>
+          <select ng-model="hour.customer_id">
+            <option ng-repeat='customer in customers' value='{{ customer.id }}' ng-selected='{{ customer_id == customer.id }}'>
+              {{ customer.name }}
+            </option>
+          </select>
+        </label>
+
+        <label class="item item-input">
+          <div class="assertive">{{ hour.errors.hours[0] }}</div>
+          <div class="input-label">Hours</div>
+          <input type="text" ng-model='hour.hours' name='hours' required>
+        </label>
+
+        <label class="item item-input">
+          <div class="assertive">{{ hour.errors.month[0] }}</div>
+          <div class="input-label">Month</div>
+          <input type="text" ng-model="hour.month" name="month" required>
+        </label>
+
+        <button ng-click='add()' class="button button-block button-calm">
+          Add
+        </button>
+
+      </div>
+    </form>
+
+    <div class="row" ng-repeat="hour in hours">
+      <div class="col">{{hour.customer.name}}</div>
+      <div class="col">{{hour.hours}}</div>
+      <div class="col">{{hour.month}}</div>
+    </div>
+  </ion-content>
+</ion-view>
