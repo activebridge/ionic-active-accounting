@@ -13,3 +13,12 @@ app.config [
     $authProvider.authToken = 'Bearer'
     $authProvider.cordova = true
   ]
+
+app.config [
+  'AuthProvider'
+  'apiEndpoint'
+  (AuthProvider, apiEndpoint) ->
+    AuthProvider.loginPath(apiEndpoint + '/admins/sign_in.json')
+    AuthProvider.logoutPath(apiEndpoint + '/admins/sign_out.json')
+    AuthProvider.resourceName('admin')
+]
