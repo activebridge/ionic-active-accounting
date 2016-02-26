@@ -2,7 +2,7 @@
 # angular.module is a global place for creating, registering and retrieving Angular modules
 # 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 # the 2nd parameter is an array of 'requires'
-app = angular.module('active-accounting', [ 'ionic', 'ngResource', 'satellizer', 'Devise' ]).run ($ionicPlatform) ->
+app = angular.module('active-accounting', [ 'ionic', 'ngResource', 'satellizer', 'Devise', 'ngStorage']).run ($ionicPlatform) ->
   $ionicPlatform.ready ->
     if window.cordova and window.cordova.plugins.Keyboard
       # Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -14,9 +14,3 @@ app = angular.module('active-accounting', [ 'ionic', 'ngResource', 'satellizer',
       cordova.plugins.Keyboard.disableScroll true
     if window.StatusBar
       StatusBar.styleDefault()
-
-app.run ($rootScope, $auth, $state) ->
-  $rootScope.$on '$stateChangeStart', (event, toState) ->
-    if toState.requireAuth and !$auth.isAuthenticated()
-      event.preventDefault()
-      $state.go('vendor_login')

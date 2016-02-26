@@ -1,6 +1,6 @@
 var app;
 
-app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer', 'Devise']).run(function($ionicPlatform) {
+app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer', 'Devise', 'ngStorage']).run(function($ionicPlatform) {
   return $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -12,16 +12,30 @@ app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer', 
   });
 });
 
-app.run(function($rootScope, $auth, $state) {
-  return $rootScope.$on('$stateChangeStart', function(event, toState) {
-    if (toState.requireAuth && !$auth.isAuthenticated()) {
-      event.preventDefault();
-      return $state.go('vendor_login');
-    }
-  });
-});
-
 app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  var adminLoginRequired, vendorLoginRequired;
+  vendorLoginRequired = function($q, $state, $auth) {
+    var deferred;
+    deferred = void 0;
+    deferred = $q.defer();
+    if ($auth.isAuthenticated()) {
+      deferred.resolve();
+    } else {
+      $state.go('vendor_login');
+    }
+    return deferred.promise;
+  };
+  adminLoginRequired = function($q, $state, $localStorage) {
+    var deferred;
+    deferred = void 0;
+    deferred = $q.defer();
+    if (angular.isObject($localStorage.currentAdmin)) {
+      deferred.resolve();
+    } else {
+      $state.go('admin_login');
+    }
+    return deferred.promise;
+  };
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   $urlRouterProvider.otherwise('/vendor_login');
@@ -42,7 +56,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         controller: 'HoursCtrl'
       }
     },
-    requireAuth: true
+    resolve: {
+      loginRequired: vendorLoginRequired
+    }
   }).state('vendor_profile.calc', {
     url: '/calc',
     views: {
@@ -51,7 +67,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         controller: 'CalcCtrl'
       }
     },
-    requireAuth: true
+    resolve: {
+      loginRequired: vendorLoginRequired
+    }
   }).state('vendor_profile.holidays', {
     url: '/our-holidays',
     views: {
@@ -60,7 +78,9 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         controller: 'HolidaysCtrl'
       }
     },
-    requireAuth: true
+    resolve: {
+      loginRequired: vendorLoginRequired
+    }
   }).state('vendor_password_reset', {
     url: 'vendor_password_reset/new',
     templateUrl: 'templates/vendor_password_reset.html',
@@ -74,18 +94,19 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     abstract: true,
     templateUrl: 'templates/admin.html',
     controller: 'AdminCtrl'
-  }).state('admin.home', {
-    url: '/home',
+  }).state('admin.register', {
+    url: '/register',
     views: {
-      'home-tab': {
-        templateUrl: 'templates/home.html',
-        controller: 'HomeCtrl'
+      'register-tab': {
+        templateUrl: 'templates/register.html',
+        controller: 'RegisterCtrl'
       }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
     }
   });
 });
-
-app.constant('apiEndpoint', 'http://localhost:3000');
 
 app.config([
   '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
@@ -101,6 +122,78 @@ app.config([
   }
 ]);
 
+app.config([
+  'AuthProvider', 'apiEndpoint', function(AuthProvider, apiEndpoint) {
+    AuthProvider.loginPath(apiEndpoint + '/admins/sign_in.json');
+    AuthProvider.logoutPath(apiEndpoint + '/admins/sign_out.json');
+    return AuthProvider.resourceName('admin');
+  }
+]);
+
+app.constant('apiEndpoint', 'http://localhost:3000');
+
+app.controller('AdminCtrl', [
+  '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
+    $scope.isCurrentAdmin = angular.isObject($localStorage.currentAdmin);
+    return $scope.logout = function() {
+      var config;
+      config = {
+        headers: {
+          'X-HTTP-Method-Override': 'DELETE'
+        }
+      };
+      return Auth.logout(config).then((function(oldUser) {
+        $localStorage.currentAdmin = null;
+        return $state.go('admin_login');
+      }), function(error) {});
+    };
+  }
+]);
+
+app.controller('AdminLoginCtrl', [
+  '$scope', '$state', 'Auth', '$ionicPopup', '$localStorage', function($scope, $state, Auth, $ionicPopup, $localStorage) {
+    $scope.admin = {};
+    return $scope.submit = function() {
+      var config;
+      config = {
+        headers: {
+          'X-HTTP-Method-Override': 'POST'
+        }
+      };
+      return Auth.login($scope.admin, config).then((function(response) {
+        $localStorage.currentAdmin = response;
+        return $state.go('admin.register');
+      }), function(error) {
+        var alertPopup;
+        return alertPopup = $ionicPopup.alert({
+          title: 'Login failed!',
+          template: 'Please check your credentials!'
+        });
+      });
+    };
+  }
+]);
+
+app.controller('CalcCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in calc controller");
+  }
+]);
+
+app.controller('HolidaysCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in holidays controller");
+  }
+]);
+
+app.controller('HoursCtrl', [
+  '$scope', function($scope) {
+    return console.log("I'm in hours controller");
+  }
+]);
+
+app.controller('RegisterCtrl', ['$scope', function($scope) {}]);
+
 app.controller('VendorLoginCtrl', [
   '$scope', '$state', '$auth', '$ionicPopup', function($scope, $state, $auth, $ionicPopup) {
     $scope.vendor = {};
@@ -115,26 +208,6 @@ app.controller('VendorLoginCtrl', [
         });
       });
     };
-  }
-]);
-
-app.controller('AdminLoginCtrl', ['$scope', '$state', '$ionicPopup', function($scope, $state, $ionicPopup) {}]);
-
-app.controller('HoursCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in hours controller");
-  }
-]);
-
-app.controller('CalcCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in calc controller");
-  }
-]);
-
-app.controller('HolidaysCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in holidays controller");
   }
 ]);
 

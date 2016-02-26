@@ -1,5 +1,23 @@
 app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
 
+  vendorLoginRequired = ($q, $state, $auth) ->
+    deferred = undefined
+    deferred = $q.defer()
+    if $auth.isAuthenticated()
+      deferred.resolve()
+    else
+      $state.go 'vendor_login'
+    deferred.promise
+
+  adminLoginRequired = ($q, $state, $localStorage) ->
+    deferred = undefined
+    deferred = $q.defer()
+    if angular.isObject($localStorage.currentAdmin)
+      deferred.resolve()
+    else
+      $state.go 'admin_login'
+    deferred.promise
+
   $ionicConfigProvider.tabs.position 'bottom'
   $ionicConfigProvider.navBar.alignTitle 'center'
 
@@ -21,21 +39,24 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     views: 'hours-tab':
       templateUrl: 'templates/hours.html'
       controller: 'HoursCtrl'
-    requireAuth: true
+    resolve:
+      loginRequired: vendorLoginRequired
   }
   .state 'vendor_profile.calc', {
     url: '/calc'
     views: 'calc-tab':
       templateUrl: 'templates/calc.html'
       controller: 'CalcCtrl'
-    requireAuth: true
+    resolve:
+      loginRequired: vendorLoginRequired
   }
   .state 'vendor_profile.holidays', {
     url: '/our-holidays'
     views: 'holidays-tab':
       templateUrl: 'templates/holidays.html'
       controller: 'HolidaysCtrl'
-    requireAuth: true
+    resolve:
+      loginRequired: vendorLoginRequired
   }
   .state 'vendor_password_reset', {
     url: 'vendor_password_reset/new'
@@ -53,9 +74,11 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     templateUrl: 'templates/admin.html'
     controller: 'AdminCtrl'
   }
-  .state 'admin.home', {
-    url: '/home'
-    views: 'home-tab':
-      templateUrl: 'templates/home.html'
-      controller: 'HomeCtrl'
+  .state 'admin.register', {
+    url: '/register'
+    views: 'register-tab':
+      templateUrl: 'templates/register.html'
+      controller: 'RegisterCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
   }

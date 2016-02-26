@@ -8,6 +8,7 @@
   "dependencies": {
     "angular-resource": "^1.5.0",
     "satellizer": "^0.13.4",
-    "AngularDevise": "angular-devise#^1.2.1"
+    "AngularDevise": "angular-devise#^1.2.1",
+    "ngstorage": "^0.3.10"
   }
 }
