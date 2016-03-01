@@ -1,6 +1,6 @@
 var app;
 
-app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer', 'Devise', 'ngStorage']).run(function($ionicPlatform) {
+app = angular.module('active-accounting', ['ionic', 'ngResource', 'satellizer', 'Devise', 'ngStorage', 'angularMoment', 'ionic-datepicker']).run(function($ionicPlatform) {
   return $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -263,13 +263,40 @@ app.controller('HolidaysCtrl', [
 ]);
 
 app.controller('HoursCtrl', [
-  '$scope', 'Hours', 'Counterparty', '$localStorage', function($scope, Hours, Counterparty, $localStorage) {
-    var init;
+  '$scope', 'Hours', 'Counterparty', '$localStorage', function($scope, Hours, Counterparty, $localStorage, $ionicPopup) {
+    var datePickerCallback, init;
+    datePickerCallback = function(val) {
+      if (typeof val !== 'undefined') {
+        return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+      }
+    };
+    $scope.datepicker = {
+      titleLabel: 'Title',
+      todayLabel: 'Today',
+      closeLabel: 'Close',
+      setLabel: 'Set',
+      setButtonType: 'button-positive',
+      todayButtonType: 'button-stable',
+      closeButtonType: 'button-stable',
+      inputDate: new Date(),
+      mondayFirst: true,
+      templateType: 'popup',
+      showTodayButton: 'true',
+      modalHeaderColor: 'bar-stable',
+      modalFooterColor: 'bar-stable',
+      callback: function(val) {
+        return datePickerCallback(val);
+      },
+      dateFormat: 'MM-yyyy',
+      closeOnSelect: true
+    };
     $scope.hour = {};
     $scope.hour.errors = {};
+    $scope.hour.month = moment().format('MM-YYYY');
     $scope.customers = Counterparty.customers({
       scope: 'active'
     });
+    $scope.edit = false;
     init = function() {
       $scope.vendor = $localStorage.currentVendor;
       return $scope.hours = Hours.query({
@@ -280,10 +307,26 @@ app.controller('HoursCtrl', [
       var hour;
       return hour = Hours.save($scope.hour, function() {
         $scope.hours.push(hour);
-        return $scope.hour.errors = [];
+        return $scope.hour.errors = {};
       }, function(response) {
         return $scope.hour.errors = response.data.error;
       });
+    };
+    $scope["delete"] = function(hour_id, index) {
+      return Hours["delete"]({
+        id: hour_id
+      }, function(success) {
+        return $scope.hours.splice(index, 1);
+      });
+    };
+    $scope.update = function(hour_id, data) {
+      return Hours.update({
+        id: hour_id
+      }, {
+        hour: {
+          hours: data
+        }
+      }, function() {}, function(response) {});
     };
     return init();
   }
@@ -449,6 +492,26 @@ app.factory('Hours', [
     return $resource('/api/hours/:id/:action', {
       id: '@id'
     }, {
+      total_hours: {
+        method: 'GET',
+        params: {
+          action: 'total_hours'
+        },
+        isArray: true
+      },
+      years: {
+        method: 'GET',
+        params: {
+          action: 'years'
+        },
+        isArray: false
+      },
+      approve_hours: {
+        method: 'POST',
+        params: {
+          action: 'approve_hours'
+        }
+      },
       update: {
         method: 'PUT'
       }
