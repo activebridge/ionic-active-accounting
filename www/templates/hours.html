@@ -5,7 +5,7 @@
 
         <div class="assertive">{{ hour.errors.customer_id[0] }}</div>
         <label class="item item-select">
-          <select ng-model="hour.customer_id" class="customer_select">
+          <select ng-model="hour.customer_id" class="customer-select">
             <option ng-repeat='customer in customers' value='{{ customer.id }}' ng-selected='{{ customer.id == customer_id }}'>
               {{ customer.name }}
             </option>
@@ -31,25 +31,21 @@
       </div>
     </form>
 
-    <div class="list hours" ng-repeat="hour in hours">
-      <div class="row row-center">
-        <div class="col">{{hour.customer.name}}</div>
+    <div class="list">
+      <div class="row row-center" ng-repeat="hour in hours">
+        <div class="col" ng-bind="hour.customer.name"></div>
         <div class="col">
-          <span ng-click="edit = !edit" ng-show="!edit">{{hour.hours}}</span>
-          <label class="item-input-wrapper">
-            <input type="number" class="number" placeholder="Hours" ng-model='hour.hours' ng-show="edit" mix='0' max='999'>
-          </label>
+          <span ng-click="edit = !edit" ng-show="!edit" ng-bind="hour.hours"></span>
+          <input class="hours-input" type="number" placeholder="Hours" ng-model='hour.hours' ng-show="edit" mix='0' max='999'>
         </div>
-        <div class="col">{{hour.month}}</div>
+        <div class="col" ng-bind="hour.month"></div>
         <div class="col">
-          <div class="button-bar">
-            <button type="submit" class="button button-light" ng-show="edit" ng-click="edit = !edit; update(hour.id, hour.hours)">
-              <i class="icon ion-checkmark-circled text-green"></i>
-            </button>
-            <button class="button button-light" ng-click="delete(hour.id, $index)">
-              <i class="icon ion-minus-circled text-red"></i>
-            </button>
-          </div>
+          <button type="submit" class="button icon ion-checkmark-circled button-clear button-balanced"
+            ng-show="edit" ng-click="edit = !edit; update(hour.id, hour.hours)">
+          </button>
+        </div>
+        <div class="col">
+          <button class="button icon ion-minus-circled button-clear button-assertive" ng-click="delete(hour.id, $index)"></button>
         </div>
       </div>
     </div>

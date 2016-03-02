@@ -21,40 +21,17 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
-.text-red {
-  color: red;
-}
-
 .col-right {
   direction: rtl;
 }
 
-.text-green {
-  color: green;
-}
-
-select.customer_select {
+select.customer-select {
   direction: ltr;
   max-width: 100%;
   width: 100%;
-  font-size: 14px;
-  padding: 4px 0 4px 12px;
 }
 
-.hours {
-  font-size: 14px;
-  padding: 0px;
-  border: 0;
-  margin-bottom: 2px;
-}
-
-input.number {
-  padding: 0px;
-  max-width: 100%;
+input.hours-input {
+  padding: 0;
   width: 100%;
-  background-color: #eee;
-}
-
-.row.row-center {
-  height: 45px;
 }

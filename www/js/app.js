@@ -153,7 +153,121 @@ app.config([
   }
 ]);
 
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
+
 app.constant('apiEndpoint', 'http://localhost:3000');
+
+app.factory('Register', [
+  '$resource', function($resource) {
+    return $resource('/api/registers/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Article', [
+  '$resource', function($resource) {
+    return $resource('/api/articles/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Vendor', [
+  '$resource', function($resource) {
+    return $resource('/api/vendor_login/:id.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Tax', [
+  '$resource', function($resource) {
+    return $resource('/api/tax/', {
+      id: '@id'
+    }, {
+      edit: {
+        url: '/api/tax/edit',
+        method: 'GET',
+        isArray: false
+      }
+    });
+  }
+]);
+
+app.factory('Hours', [
+  '$resource', function($resource) {
+    return $resource('/api/hours/:id/:action', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Counterparty', [
+  '$resource', function($resource) {
+    return $resource('/api/counterparties/:id/:action', {
+      id: '@id'
+    }, {
+      customers: {
+        method: 'GET',
+        params: {
+          action: 'customers'
+        },
+        isArray: true
+      },
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -263,63 +377,35 @@ app.controller('HolidaysCtrl', [
 ]);
 
 app.controller('HoursCtrl', [
-  '$scope', 'Hours', 'Counterparty', '$localStorage', function($scope, Hours, Counterparty, $localStorage, $ionicPopup) {
-    var datePickerCallback, init;
-    datePickerCallback = function(val) {
-      if (typeof val !== 'undefined') {
-        return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-      }
-    };
-    $scope.datepicker = {
-      titleLabel: 'Title',
-      todayLabel: 'Today',
-      closeLabel: 'Close',
-      setLabel: 'Set',
-      setButtonType: 'button-positive',
-      todayButtonType: 'button-stable',
-      closeButtonType: 'button-stable',
-      inputDate: new Date(),
-      mondayFirst: true,
-      templateType: 'popup',
-      showTodayButton: 'true',
-      modalHeaderColor: 'bar-stable',
-      modalFooterColor: 'bar-stable',
-      callback: function(val) {
-        return datePickerCallback(val);
-      },
-      dateFormat: 'MM-yyyy',
-      closeOnSelect: true
-    };
+  '$scope', 'Hours', 'Counterparty', '$localStorage', 'datepickerDecorator', function($scope, Hours, Counterparty, $localStorage, datepickerDecorator) {
+    datepickerDecorator($scope);
     $scope.hour = {};
     $scope.hour.errors = {};
     $scope.hour.month = moment().format('MM-YYYY');
     $scope.customers = Counterparty.customers({
       scope: 'active'
     });
+    $scope.vendor = $localStorage.currentVendor;
+    $scope.hours = Hours.query({
+      vendor_id: $scope.vendor.id
+    });
     $scope.edit = false;
-    init = function() {
-      $scope.vendor = $localStorage.currentVendor;
-      return $scope.hours = Hours.query({
-        vendor_id: $scope.vendor.id
-      });
-    };
     $scope.add = function() {
-      var hour;
-      return hour = Hours.save($scope.hour, function() {
+      return Hours.save($scope.hour, function(hour) {
         $scope.hours.push(hour);
         return $scope.hour.errors = {};
       }, function(response) {
         return $scope.hour.errors = response.data.error;
       });
     };
-    $scope["delete"] = function(hour_id, index) {
+    $scope["delete"] = function(id, index) {
       return Hours["delete"]({
-        id: hour_id
-      }, function(success) {
+        id: id
+      }, function() {
         return $scope.hours.splice(index, 1);
       });
     };
-    $scope.update = function(hour_id, data) {
+    return $scope.update = function(hour_id, data) {
       return Hours.update({
         id: hour_id
       }, {
@@ -328,7 +414,6 @@ app.controller('HoursCtrl', [
         }
       }, function() {}, function(response) {});
     };
-    return init();
   }
 ]);
 
@@ -434,113 +519,5 @@ app.controller('VendorProfileCtrl', [
         return $state.go('vendor_login');
       });
     };
-  }
-]);
-
-app.factory('Register', [
-  '$resource', function($resource) {
-    return $resource('/api/registers/:id', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Article', [
-  '$resource', function($resource) {
-    return $resource('/api/articles/:id', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Vendor', [
-  '$resource', function($resource) {
-    return $resource('/api/vendor_login/:id.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Tax', [
-  '$resource', function($resource) {
-    return $resource('/api/tax/', {
-      id: '@id'
-    }, {
-      edit: {
-        url: '/api/tax/edit',
-        method: 'GET',
-        isArray: false
-      }
-    });
-  }
-]);
-
-app.factory('Hours', [
-  '$resource', function($resource) {
-    return $resource('/api/hours/:id/:action', {
-      id: '@id'
-    }, {
-      total_hours: {
-        method: 'GET',
-        params: {
-          action: 'total_hours'
-        },
-        isArray: true
-      },
-      years: {
-        method: 'GET',
-        params: {
-          action: 'years'
-        },
-        isArray: false
-      },
-      approve_hours: {
-        method: 'POST',
-        params: {
-          action: 'approve_hours'
-        }
-      },
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Counterparty', [
-  '$resource', function($resource) {
-    return $resource('/api/counterparties/:id/:action', {
-      id: '@id'
-    }, {
-      payments: {
-        method: 'GET',
-        params: {
-          action: 'payments'
-        },
-        isArray: true
-      },
-      customers: {
-        method: 'GET',
-        params: {
-          action: 'customers'
-        },
-        isArray: true
-      },
-      update: {
-        method: 'PUT'
-      }
-    });
   }
 ]);

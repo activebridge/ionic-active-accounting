@@ -15,14 +15,22 @@ app.factory 'Vendor', [
 
 app.factory 'Tax', [
   '$resource', ($resource) ->
-    $resource '/api/tax/', {id: '@id'}, edit: url: '/api/tax/edit' method: 'GET', isArray: false
+    $resource '/api/tax/', {id: '@id'}, edit: url: '/api/tax/edit', method: 'GET', isArray: false
 ]
 
 app.factory 'Hours', [
   '$resource', ($resource) ->
     $resource '/api/hours/:id/:action', {id: '@id'}, update: method: 'PUT'
+]
 
-app.factory 'Counterparty', [
-  '$resource', ($resource) ->
-    $resource '/api/counterparties/:id/:action', {id: '@id'}, update: method: 'PUT'
+app.factory 'Counterparty', ['$resource', ($resource) ->
+  $resource '/api/counterparties/:id/:action',
+    id: '@id'
+  , customers:
+    method: 'GET',
+    params:
+      action: 'customers'
+    isArray: true
+  , update:
+    method: 'PUT'
 ]
