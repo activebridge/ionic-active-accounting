@@ -1,0 +1,49 @@
+<ion-view view-title="Новий запис">
+
+<ion-content>
+
+  <div class="list list-inset">
+
+    <form name='newRegisterForm' novalidate>
+
+    <label class="item item-input">
+      <div class="input-label positive">Дата</div>
+      <input type="date" ng-model="register.date" required>
+		</label>
+
+    <label class="item item-input item-select">
+      <div class="input-label positive" ng-controller="ArticleCtrl">Стаття
+        <select ng-model="register.article_id" ng-options="article.id as article.name for article in articles" required>
+          <option value="">Not selected</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="item item-input item-select">
+      <div class="input-label positive" ng-controller="CounterpartyCtrl">Контрагент
+        <select ng-model="register.counterparty_id" ng-options="counterparty.id as counterparty.name for counterparty in counterparties">
+          <option value="">Not selected</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="item item-input">
+      <div class="input-label positive">Сума</div>
+      <input type="number" min="0" oninput="validity.valid||(value='')" ng-model="register.value"/ required>
+    </label>
+
+    <label class="item item-input">
+      <div class="input-label positive">Примітка</div>
+      <textarea placeholder="" rows="5" ng-model="register.notes"></textarea>
+    </label>
+
+    <button type="submit" class="button button-block button-positive" ng-click='saveRegister()' ng-disabled="newRegisterForm.$invalid">
+      Додати
+    </button>
+
+  </form>
+</div>
+
+</ion-content>
+
+</ion-view>

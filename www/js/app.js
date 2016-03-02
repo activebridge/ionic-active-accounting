@@ -96,10 +96,33 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     controller: 'AdminCtrl'
   }).state('admin.register', {
     url: '/register',
+    cache: false,
     views: {
       'register-tab': {
         templateUrl: 'templates/register.html',
         controller: 'RegisterCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    }
+  }).state('admin.register_new', {
+    url: '/register/new',
+    views: {
+      'register-tab': {
+        templateUrl: 'templates/register-new.html',
+        controller: 'RegisterNewCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    }
+  }).state('admin.register_detail', {
+    url: '/register/:registerId',
+    views: {
+      'register-tab': {
+        templateUrl: 'templates/register-detail.html',
+        controller: 'RegisterDetailCtrl'
       }
     },
     resolve: {
@@ -174,9 +197,39 @@ app.controller('AdminLoginCtrl', [
   }
 ]);
 
+app.controller('ArticleCtrl', [
+  '$scope', 'Article', function($scope, Article) {
+    var init;
+    $scope.loadArticles = function() {
+      return Article.query(function(response) {
+        return $scope.articles = response;
+      });
+    };
+    init = function() {
+      return $scope.loadArticles();
+    };
+    return init();
+  }
+]);
+
 app.controller('CalcCtrl', [
   '$scope', function($scope) {
     return console.log("I'm in calc controller");
+  }
+]);
+
+app.controller('CounterpartyCtrl', [
+  '$scope', 'Counterparty', function($scope, Counterparty) {
+    var init;
+    $scope.loadCounterparties = function() {
+      return Counterparty.query(function(response) {
+        return $scope.counterparties = response;
+      });
+    };
+    init = function() {
+      return $scope.loadCounterparties();
+    };
+    return init();
   }
 ]);
 
@@ -192,7 +245,73 @@ app.controller('HoursCtrl', [
   }
 ]);
 
-app.controller('RegisterCtrl', ['$scope', function($scope) {}]);
+app.controller('RegisterCtrl', [
+  '$scope', '$state', 'Register', function($scope, $state, Register) {
+    var init;
+    $scope.loadRegisters = function() {
+      return Register.query(function(response) {
+        return $scope.registers = response;
+      });
+    };
+    init = function() {
+      return $scope.loadRegisters();
+    };
+    return init();
+  }
+]);
+
+app.controller('RegisterDetailCtrl', [
+  '$scope', '$state', '$ionicPopup', '$stateParams', 'Register', function($scope, $state, $ionicPopup, $stateParams, Register) {
+    var init;
+    $scope.getRegister = function() {
+      return Register.get({
+        id: $stateParams.registerId
+      }, function(response) {
+        $scope.register = response;
+        return $scope.register.date = new Date($scope.register.date);
+      });
+    };
+    $scope.deleteRegister = function(id) {
+      var confirmPopup;
+      confirmPopup = $ionicPopup.confirm({
+        title: 'Видалення',
+        template: 'Ви впевнені в своєму рішенні?'
+      });
+      return confirmPopup.then(function(response) {
+        if (response) {
+          return Register["delete"]({
+            id: id
+          }, function() {
+            return $state.go('admin.register');
+          });
+        }
+      });
+    };
+    $scope.updateRegister = function() {
+      return Register.update($scope.register, function() {
+        return $state.go('admin.register');
+      });
+    };
+    init = function() {
+      return $scope.getRegister();
+    };
+    return init();
+  }
+]);
+
+app.controller('RegisterNewCtrl', [
+  '$scope', '$state', 'Register', function($scope, $state, Register) {
+    $scope.register = {
+      currency: 'UAH'
+    };
+    return $scope.saveRegister = function() {
+      return Register.save($scope.register, function() {
+        $scope.register.errors = {};
+        return $state.go('admin.register');
+      });
+    };
+  }
+]);
 
 app.controller('VendorLoginCtrl', [
   '$scope', '$state', '$auth', '$ionicPopup', function($scope, $state, $auth, $ionicPopup) {
@@ -230,4 +349,38 @@ app.controller('VendorProfileCtrl', [
   }
 ]);
 
+angular.module('active-accounting').factory('Counterparty', [
+  '$resource', function($resource) {
+    return $resource('/api/counterparties/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
 
+angular.module('active-accounting').factory('Register', [
+  '$resource', function($resource) {
+    return $resource('/api/registers/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+angular.module('active-accounting').factory('Article', [
+  '$resource', function($resource) {
+    return $resource('/api/articles/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);

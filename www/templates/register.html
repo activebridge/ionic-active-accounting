@@ -1,0 +1,19 @@
+<ion-view view-title="Реєстр">
+
+<ion-nav-buttons side="right">
+	<a class="button button-dark" ui-sref="admin.register_new"> Додати </a>
+</ion-nav-buttons>
+
+<ion-content>
+
+	<ion-list>
+		<ion-item class="item-text-wrap" ng-repeat="register in registers" ng-href="#/admin/register/{{register.id}}">
+			{{register.date}}
+			{{register.article.name}}
+			{{register.counterparty.name}}
+			{{register.value}}{{register.currency}}
+		</ion-item>
+	</ion-list>
+</ion-content>
+
+</ion-view>

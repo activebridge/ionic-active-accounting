@@ -76,9 +76,26 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.register', {
     url: '/register'
+    cache: false
     views: 'register-tab':
       templateUrl: 'templates/register.html'
       controller: 'RegisterCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+  }
+  .state 'admin.register_new', {
+    url: '/register/new'
+    views: 'register-tab':
+      templateUrl: 'templates/register-new.html'
+      controller: 'RegisterNewCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+  }
+  .state 'admin.register_detail', {
+    url: '/register/:registerId'
+    views: 'register-tab':
+      templateUrl: 'templates/register-detail.html'
+      controller: 'RegisterDetailCtrl'
     resolve:
       loginRequired: adminLoginRequired
   }
