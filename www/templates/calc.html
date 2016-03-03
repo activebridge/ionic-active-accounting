@@ -1,0 +1,45 @@
+<ion-view view-title="Wage calculator">
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Single social tax, hrn</span>
+        <input type="number" disabled='disable' ng-model='tax.social'>
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">currency exchange Rate</span>
+        <input type="number" ng-change='report()' ng-model='data.exchange' maxlength='5'>
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Salary, hrn</span>
+        <input type="number" ng-change='report()' ng-model='data.salary' maxlength='6'>
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Translation (in USD)</span>
+        <input type="number" ng-change='report()' ng-model='data.translation' maxlength='10'>
+      </label>
+    </div>
+
+    <div class="list item">
+      <div class="row">
+        <div class="col">Salary, hrn</div>
+        <div class="col col-right">{{salaryHrn | number:2}}</div>
+      </div>
+      <div class="row">
+        <div class="col">Single social tax, hrn</div>
+        <div class="col col-right" ng-bind="tax.social"></div>
+      </div>
+      <div class="row">
+        <div class="col">Cashing Tax, % ({{tax.cash}})</div>
+        <div class="col col-right">{{cashingTaxSum | number:2}}</div>
+      </div>
+      <div class="row">
+        <div class="col">Single Tax, % ({{tax.single}})</div>
+        <div class="col col-right">{{singleTaxSum | number:2}}</div>
+      </div>
+      <div class="row">
+        <div class="col">Total:</div>
+        <div class="col col-right" ng-bind="total"></div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

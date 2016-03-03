@@ -213,8 +213,31 @@ app.controller('ArticleCtrl', [
 ]);
 
 app.controller('CalcCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in calc controller");
+  '$scope', 'Tax', function($scope, Tax) {
+    var init, percentToIndex;
+    init = function() {
+      $scope.data = {};
+      $scope.data.salary = 0;
+      $scope.data.exchange = 0;
+      $scope.data.translation = 0;
+      return Tax.edit(function(response) {
+        return $scope.tax = response;
+      });
+    };
+    percentToIndex = function(tax) {
+      return 1 - tax / 100;
+    };
+    $scope.report = function() {
+      var salaryAndTranslation, salaryWithCashTax, total;
+      $scope.salaryHrn = $scope.data.salary * $scope.data.exchange;
+      salaryAndTranslation = $scope.salaryHrn + $scope.data.translation;
+      salaryWithCashTax = salaryAndTranslation / percentToIndex($scope.tax.cash);
+      $scope.cashingTaxSum = salaryWithCashTax - salaryAndTranslation;
+      $scope.singleTaxSum = salaryWithCashTax / percentToIndex($scope.tax.single) - salaryWithCashTax;
+      total = salaryWithCashTax + $scope.tax.social + $scope.singleTaxSum;
+      return $scope.total = total.toFixed(2).replace('.', ',');
+    };
+    return init();
   }
 ]);
 
@@ -378,6 +401,23 @@ angular.module('active-accounting').factory('Article', [
     return $resource('/api/articles/:id', {
       id: '@id'
     }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Tax', [
+  '$resource', function($resource) {
+    return $resource('/api/tax/', {
+      id: '@id'
+    }, {
+      edit: {
+        url: '/api/tax/edit',
+        method: 'GET',
+        isArray: false
+      },
       update: {
         method: 'PUT'
       }
