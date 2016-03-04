@@ -21,10 +21,17 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
-.text-red {
-  color: red;
-}
-
 .col-right {
   direction: rtl;
+}
+
+select.customer-select {
+  direction: ltr;
+  max-width: 100%;
+  width: 100%;
+}
+
+input.hours-input {
+  padding: 0;
+  width: 100%;
 }

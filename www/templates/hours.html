@@ -1,0 +1,53 @@
+<ion-view view-title="Management own hours">
+  <ion-content class="padding">
+    <form name='hoursForm' novalidate>
+      <div class="list list-inset">
+
+        <div class="assertive">{{ hour.errors.customer_id[0] }}</div>
+        <label class="item item-select">
+          <select ng-model="hour.customer_id" class="customer-select">
+            <option ng-repeat='customer in customers' value='{{ customer.id }}' ng-selected='{{ customer.id == customer_id }}'>
+              {{ customer.name }}
+            </option>
+          </select>
+        </label>
+
+        <div class="assertive">{{ hour.errors.hours[0] }}</div>
+        <label class="item item-input">
+          <input type="number" placeholder="Hours" ng-model='hour.hours' name='hours' mix='0' max='999' required>
+        </label>
+
+        <div class="assertive">{{ hour.errors.month[0] }}</div>
+        <label class="item item-input">
+          <ionic-datepicker input-obj="datepicker">
+            <input type="text" placeholder="Month" ng-model="hour.month" name="month" required>
+          </ionic-datepicker>
+        </label>
+
+        <button type="submit" ng-click='add()' class="button button-block button-calm">
+          Add
+        </button>
+
+      </div>
+    </form>
+
+    <div class="list">
+      <div class="row row-center" ng-repeat="hour in hours">
+        <div class="col" ng-bind="hour.customer.name"></div>
+        <div class="col">
+          <span ng-click="edit = !edit" ng-show="!edit" ng-bind="hour.hours"></span>
+          <input class="hours-input" type="number" placeholder="Hours" ng-model='hour.hours' ng-show="edit" mix='0' max='999'>
+        </div>
+        <div class="col" ng-bind="hour.month"></div>
+        <div class="col">
+          <button type="submit" class="button icon ion-checkmark-circled button-clear button-balanced"
+            ng-show="edit" ng-click="edit = !edit; update(hour.id, hour.hours)">
+          </button>
+        </div>
+        <div class="col">
+          <button class="button icon ion-minus-circled button-clear button-assertive" ng-click="delete(hour.id, $index)"></button>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -3,13 +3,15 @@ app.controller 'VendorLoginCtrl', [
   '$state'
   '$auth'
   '$ionicPopup'
-  ($scope, $state, $auth, $ionicPopup) ->
+  '$localStorage'
+  ($scope, $state, $auth, $ionicPopup, $localStorage) ->
 
     $scope.vendor = {}
 
     $scope.submit = ->
       $auth.login($scope.vendor).then((response) ->
         $state.go 'vendor_profile.hours'
+        $localStorage.currentVendor = response.data
       )['catch'] (error) ->
         alertPopup = $ionicPopup.alert(
           title: 'Login failed!'
