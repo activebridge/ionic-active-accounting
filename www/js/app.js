@@ -153,7 +153,7 @@ app.config([
   }
 ]);
 
-app.constant('apiEndpoint', 'http://localhost:3000');
+app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
