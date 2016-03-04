@@ -3,11 +3,5 @@
   "app_id": "37dcc2d4",
   "gulpStartupTasks": [
     "watch"
-  ],
-  "proxies": [
-    {
-      "path": "/api",
-      "proxyUrl": "http://localhost:3000"
-    }
   ]
 }

@@ -153,121 +153,7 @@ app.config([
   }
 ]);
 
-app.factory('datepickerDecorator', [
-  function() {
-    return function($scope) {
-      var datePickerCallback;
-      datePickerCallback = function(val) {
-        if (val != null) {
-          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-        }
-      };
-      return $scope.datepicker = {
-        titleLabel: 'Title',
-        todayLabel: 'Today',
-        closeLabel: 'Close',
-        setLabel: 'Set',
-        setButtonType: 'button-positive',
-        todayButtonType: 'button-stable',
-        closeButtonType: 'button-stable',
-        inputDate: new Date(),
-        mondayFirst: true,
-        templateType: 'popup',
-        showTodayButton: 'true',
-        modalHeaderColor: 'bar-stable',
-        modalFooterColor: 'bar-stable',
-        dateFormat: 'MM-yyyy',
-        closeOnSelect: true,
-        callback: function(val) {
-          return datePickerCallback(val);
-        }
-      };
-    };
-  }
-]);
-
 app.constant('apiEndpoint', 'http://localhost:3000');
-
-app.factory('Register', [
-  '$resource', function($resource) {
-    return $resource('/api/registers/:id', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Article', [
-  '$resource', function($resource) {
-    return $resource('/api/articles/:id', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Vendor', [
-  '$resource', function($resource) {
-    return $resource('/api/vendor_login/:id.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Tax', [
-  '$resource', function($resource) {
-    return $resource('/api/tax/', {
-      id: '@id'
-    }, {
-      edit: {
-        url: '/api/tax/edit',
-        method: 'GET',
-        isArray: false
-      }
-    });
-  }
-]);
-
-app.factory('Hours', [
-  '$resource', function($resource) {
-    return $resource('/api/hours/:id/:action', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-app.factory('Counterparty', [
-  '$resource', function($resource) {
-    return $resource('/api/counterparties/:id/:action', {
-      id: '@id'
-    }, {
-      customers: {
-        method: 'GET',
-        params: {
-          action: 'customers'
-        },
-        isArray: true
-      },
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -510,14 +396,129 @@ app.controller('VendorPasswordResetCtrl', [
 ]);
 
 app.controller('VendorProfileCtrl', [
-  '$scope', '$state', '$auth', '$ionicPopup', function($scope, $state, $auth, $ionicPopup) {
+  '$scope', '$state', '$auth', '$ionicPopup', '$localStorage', function($scope, $state, $auth, $ionicPopup, $localStorage) {
     $scope.isAuthenticated = function() {
       return $auth.isAuthenticated();
     };
     return $scope.logout = function() {
       return $auth.logout().then(function() {
-        return $state.go('vendor_login');
+        $state.go('vendor_login');
+        return $localStorage.currentVendor = null;
       });
     };
+  }
+]);
+
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
+
+app.factory('Register', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/registers/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Article', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/articles/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Vendor', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/vendor_login/:id.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Tax', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/tax/', {
+      id: '@id'
+    }, {
+      edit: {
+        url: '/tax/edit',
+        method: 'GET',
+        isArray: false
+      }
+    });
+  }
+]);
+
+app.factory('Hours', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/hours/:id/:action', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+app.factory('Counterparty', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/counterparties/:id/:action', {
+      id: '@id'
+    }, {
+      customers: {
+        method: 'GET',
+        params: {
+          action: 'customers'
+        },
+        isArray: true
+      },
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 ]);

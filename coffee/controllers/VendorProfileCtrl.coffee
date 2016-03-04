@@ -3,7 +3,8 @@ app.controller 'VendorProfileCtrl', [
   '$state'
   '$auth'
   '$ionicPopup'
-  ($scope, $state, $auth, $ionicPopup) ->
+  '$localStorage'
+  ($scope, $state, $auth, $ionicPopup, $localStorage) ->
 
     $scope.isAuthenticated = ->
       $auth.isAuthenticated()
@@ -11,4 +12,6 @@ app.controller 'VendorProfileCtrl', [
     $scope.logout = ->
       $auth.logout().then ->
         $state.go 'vendor_login'
+        $localStorage.currentVendor = null
+
 ]

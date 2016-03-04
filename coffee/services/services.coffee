@@ -1,30 +1,30 @@
 app.factory 'Register', [
-  '$resource', ($resource) ->
-    $resource '/api/registers/:id', { id: '@id' }, update: method: 'PUT'
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/registers/:id', { id: '@id' }, update: method: 'PUT'
 ]
 
 app.factory 'Article', [
-  '$resource', ($resource) ->
-    $resource '/api/articles/:id', { id: '@id' }, update: method: 'PUT'
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/articles/:id', { id: '@id' }, update: method: 'PUT'
 ]
 
 app.factory 'Vendor', [
-  '$resource', ($resource) ->
-    $resource '/api/vendor_login/:id.json', { id: '@id' }, update: method: 'PUT'
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/vendor_login/:id.json', { id: '@id' }, update: method: 'PUT'
   ]
 
 app.factory 'Tax', [
-  '$resource', ($resource) ->
-    $resource '/api/tax/', {id: '@id'}, edit: url: '/api/tax/edit', method: 'GET', isArray: false
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/tax/', {id: '@id'}, edit: url: '/tax/edit', method: 'GET', isArray: false
 ]
 
 app.factory 'Hours', [
-  '$resource', ($resource) ->
-    $resource '/api/hours/:id/:action', {id: '@id'}, update: method: 'PUT'
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/hours/:id/:action', {id: '@id'}, update: method: 'PUT'
 ]
 
-app.factory 'Counterparty', ['$resource', ($resource) ->
-  $resource '/api/counterparties/:id/:action',
+app.factory 'Counterparty', ['$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+  $resource apiEndpoint + '/counterparties/:id/:action',
     id: '@id'
   , customers:
     method: 'GET',
