@@ -2,6 +2,10 @@
   <ion-content class="padding">
 	  <form name='loginForm' novalidate>
       <div class="list list-inset">
+
+        <p class="text-red" ng-show="loginForm.email.$error.required">* Email is required</p>
+        <p class="text-red" ng-show="loginForm.email.$invalid && !loginForm.email.$pristine">* Email is invalid</p>
+        <p class="text-red" ng-show="loginForm.password.$error.required">* Password is required</p>
         <label class="item item-input">
           <input type="email" placeholder="Email" ng-model='vendor.email' name='email' required>
         </label>
@@ -10,10 +14,6 @@
           <input type="password" placeholder="Password" ng-model='vendor.password' name='password' required>
         </label>
       </div>
-
-      <p class="text-red" ng-show="loginForm.email.$error.required">* Email is required</p>
-      <p class="text-red" ng-show="loginForm.email.$invalid && !loginForm.email.$pristine">* Email is invalid</p>
-      <p class="text-red" ng-show="loginForm.password.$error.required">* Password is required</p>
 
       <button ng-click='submit()' ng-disabled="loginForm.$invalid" class="button button-block button-balanced">
         Sign in

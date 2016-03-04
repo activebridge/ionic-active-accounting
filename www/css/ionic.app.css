@@ -9731,6 +9731,9 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
+.text-red {
+  color: red; }
+
 .col-right {
   direction: rtl; }
 

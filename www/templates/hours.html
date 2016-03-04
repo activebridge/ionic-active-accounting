@@ -5,10 +5,8 @@
 
         <div class="assertive">{{ hour.errors.customer_id[0] }}</div>
         <label class="item item-select">
-          <select ng-model="hour.customer_id" class="customer-select">
-            <option ng-repeat='customer in customers' value='{{ customer.id }}' ng-selected='{{ customer.id == customer_id }}'>
-              {{ customer.name }}
-            </option>
+          <select class="customer-select" ng-model="hour.customer_id" ng-options="customer.id as customer.name for customer in customers" required>
+            <option value="">Not selected</option>
           </select>
         </label>
 
