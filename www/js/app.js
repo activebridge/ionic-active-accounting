@@ -484,7 +484,7 @@ app.factory('Tax', [
       id: '@id'
     }, {
       edit: {
-        url: '/tax/edit',
+        url: apiEndpoint + '/tax/edit',
         method: 'GET',
         isArray: false
       }

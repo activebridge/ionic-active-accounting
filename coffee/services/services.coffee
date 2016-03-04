@@ -15,7 +15,7 @@ app.factory 'Vendor', [
 
 app.factory 'Tax', [
   '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
-    $resource apiEndpoint + '/tax/', {id: '@id'}, edit: url: '/tax/edit', method: 'GET', isArray: false
+    $resource apiEndpoint + '/tax/', {id: '@id'}, edit: url: apiEndpoint + '/tax/edit', method: 'GET', isArray: false
 ]
 
 app.factory 'Hours', [

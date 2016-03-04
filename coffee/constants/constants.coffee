@@ -1,2 +1,2 @@
 # Change for production
-app.constant 'apiEndpoint', 'http://accounting.active-bridge.com'
+app.constant 'apiEndpoint', 'http://localhost:3000'
