@@ -9733,3 +9733,6 @@ a.button {
 
 .text-red {
   color: red; }
+
+.col-right {
+  direction: rtl; }
