@@ -158,8 +158,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   });
 });
 
-app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
-
 app.config([
   '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
     $authProvider.withCredentials = true;
@@ -182,38 +180,7 @@ app.config([
   }
 ]);
 
-app.factory('datepickerDecorator', [
-  function() {
-    return function($scope) {
-      var datePickerCallback;
-      datePickerCallback = function(val) {
-        if (val != null) {
-          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-        }
-      };
-      return $scope.datepicker = {
-        titleLabel: 'Title',
-        todayLabel: 'Today',
-        closeLabel: 'Close',
-        setLabel: 'Set',
-        setButtonType: 'button-positive',
-        todayButtonType: 'button-stable',
-        closeButtonType: 'button-stable',
-        inputDate: new Date(),
-        mondayFirst: true,
-        templateType: 'popup',
-        showTodayButton: 'true',
-        modalHeaderColor: 'bar-stable',
-        modalFooterColor: 'bar-stable',
-        dateFormat: 'MM-yyyy',
-        closeOnSelect: true,
-        callback: function(val) {
-          return datePickerCallback(val);
-        }
-      };
-    };
-  }
-]);
+app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -323,19 +290,28 @@ app.controller('HolidaysCtrl', [
 ]);
 
 app.controller('HoursCtrl', [
-  '$scope', 'Hours', 'Counterparty', '$localStorage', 'datepickerDecorator', function($scope, Hours, Counterparty, $localStorage, datepickerDecorator) {
+  '$scope', 'Hours', 'Counterparty', '$localStorage', 'datepickerDecorator', 'hourDecorator', function($scope, Hours, Counterparty, $localStorage, datepickerDecorator, hourDecorator) {
+    var init;
     datepickerDecorator($scope);
-    $scope.hour = {};
-    $scope.hour.errors = {};
-    $scope.hour.month = moment().format('MM-YYYY');
-    $scope.customers = Counterparty.customers({
-      scope: 'active'
-    });
-    $scope.vendor = $localStorage.currentVendor;
-    $scope.hours = Hours.query({
-      vendor_id: $scope.vendor.id
-    });
-    $scope.edit = false;
+    hourDecorator($scope);
+    init = function() {
+      $scope.hour = {};
+      $scope.hour.errors = {};
+      $scope.hour.month = moment().format('MM-YYYY');
+      $scope.getWorkingDays($scope.hour.month);
+      $scope.$watch('workingDays', function(value) {
+        return $scope.hour.hours = $scope.getWorkingHours();
+      });
+      $scope.vendor = $localStorage.currentVendor;
+      $scope.hour.customer_id = $scope.vendor.customer_id;
+      $scope.customers = Counterparty.customers({
+        scope: 'active'
+      });
+      $scope.hours = Hours.query({
+        vendor_id: $scope.vendor.id
+      });
+      return $scope.edit = false;
+    };
     $scope.add = function() {
       return Hours.save($scope.hour, function(hour) {
         $scope.hours.push(hour);
@@ -351,7 +327,7 @@ app.controller('HoursCtrl', [
         return $scope.hours.splice(index, 1);
       });
     };
-    return $scope.update = function(hour_id, data) {
+    $scope.update = function(hour_id, data) {
       return Hours.update({
         id: hour_id
       }, {
@@ -360,6 +336,7 @@ app.controller('HoursCtrl', [
         }
       }, function() {}, function(response) {});
     };
+    return init();
   }
 ]);
 
@@ -469,6 +446,56 @@ app.controller('VendorProfileCtrl', [
   }
 ]);
 
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
+
+app.factory('hourDecorator', [
+  'Hours', 'WorkDay', function(Hours, WorkDay) {
+    return function($scope) {
+      $scope.getWorkingDays = function(value) {
+        return WorkDay.get({
+          date: value
+        }, function(response) {
+          return $scope.workingDays = response.count;
+        });
+      };
+      return $scope.getWorkingHours = function() {
+        return $scope.workingHours = $scope.workingDays * 8;
+      };
+    };
+  }
+]);
+
 app.factory('Register', [
   '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
     return $resource(apiEndpoint + '/registers/:id', {
@@ -547,5 +574,11 @@ app.factory('Counterparty', [
         method: 'PUT'
       }
     });
+  }
+]);
+
+app.factory('WorkDay', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/work_days/');
   }
 ]);

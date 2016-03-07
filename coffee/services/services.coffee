@@ -34,3 +34,7 @@ app.factory 'Counterparty', ['$resource', 'apiEndpoint', ($resource, apiEndpoint
   , update:
     method: 'PUT'
 ]
+
+app.factory 'WorkDay', ['$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+  $resource apiEndpoint + '/work_days/'
+]
