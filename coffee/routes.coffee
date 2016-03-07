@@ -41,6 +41,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       controller: 'HoursCtrl'
     resolve:
       loginRequired: vendorLoginRequired
+    cache: false
   }
   .state 'vendor_profile.calc', {
     url: '/calc'
@@ -49,6 +50,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       controller: 'CalcCtrl'
     resolve:
       loginRequired: vendorLoginRequired
+    cache: false
   }
   .state 'vendor_profile.holidays', {
     url: '/our-holidays'
@@ -57,6 +59,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       controller: 'HolidaysCtrl'
     resolve:
       loginRequired: vendorLoginRequired
+    cache: false
   }
   .state 'vendor_password_reset', {
     url: 'vendor_password_reset/new'
@@ -96,6 +99,24 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     views: 'register-tab':
       templateUrl: 'templates/register-detail.html'
       controller: 'RegisterDetailCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+  }
+  .state 'admin.counterparty', {
+    url: '/counterparty'
+    cache: false
+    views: 'counterparty-tab':
+      templateUrl: 'templates/counterparty.html'
+      controller: 'CounterpartyCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+  }
+  .state 'admin.counterparty-new', {
+    url: '/counterparty/new'
+    cache: false
+    views: 'counterparty-tab':
+      templateUrl: 'templates/counterparty-new.html'
+      controller: 'CounterpartyNewCtrl'
     resolve:
       loginRequired: adminLoginRequired
   }

@@ -9745,3 +9745,17 @@ select.customer-select {
 input.hours-input {
   padding: 0;
   width: 100%; }
+
+.header .col {
+  background-color: lightgrey; }
+
+.border {
+  border: solid 1px grey;
+  border-right-style: none; }
+
+.border:last-child {
+  border-right: solid 1px grey; }
+
+.register:active {
+  border-color: #ccc;
+  background-color: #D9D9D9; }

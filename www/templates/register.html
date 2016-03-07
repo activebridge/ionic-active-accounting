@@ -6,14 +6,20 @@
 
 <ion-content>
 
-	<ion-list>
-		<ion-item class="item-text-wrap" ng-repeat="register in registers" ng-href="#/admin/register/{{register.id}}">
-			{{register.date}}
-			{{register.article.name}}
-			{{register.counterparty.name}}
-			{{register.value}}{{register.currency}}
-		</ion-item>
-	</ion-list>
+	<div class="row header">
+	  <div class="border col">Дата</div>
+		<div class="border col">Стаття</div>
+		<div class="border col">Контрагент</div>
+		<div class="border col">Сума</div>
+	</div>
+
+	<div class="row register" ng-repeat="register in registers" ui-sref="admin.register_detail({registerId: register.id})">
+		<div class="border col">{{register.date}}</div>
+		<div class="border col">{{register.article.name}}</div>
+		<div class="border col">{{register.counterparty.name}}</div>
+		<div class="border col">{{register.value}} {{register.currency}}</div>
+	</div>
+
 </ion-content>
 
 </ion-view>
