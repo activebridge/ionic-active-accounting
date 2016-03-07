@@ -58,7 +58,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: vendorLoginRequired
-    }
+    },
+    cache: false
   }).state('vendor_profile.calc', {
     url: '/calc',
     views: {
@@ -69,7 +70,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: vendorLoginRequired
-    }
+    },
+    cache: false
   }).state('vendor_profile.holidays', {
     url: '/our-holidays',
     views: {
@@ -80,7 +82,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: vendorLoginRequired
-    }
+    },
+    cache: false
   }).state('vendor_password_reset', {
     url: 'vendor_password_reset/new',
     templateUrl: 'templates/vendor_password_reset.html',
@@ -128,6 +131,30 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     resolve: {
       loginRequired: adminLoginRequired
     }
+  }).state('admin.counterparty', {
+    url: '/counterparty',
+    cache: false,
+    views: {
+      'counterparty-tab': {
+        templateUrl: 'templates/counterparty.html',
+        controller: 'CounterpartyCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    }
+  }).state('admin.counterparty-new', {
+    url: '/counterparty/new',
+    cache: false,
+    views: {
+      'counterparty-tab': {
+        templateUrl: 'templates/counterparty-new.html',
+        controller: 'CounterpartyNewCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    }
   });
 });
 
@@ -153,7 +180,7 @@ app.config([
   }
 ]);
 
-app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
+app.constant('apiEndpoint', 'http://localhost:3000');
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -263,19 +290,28 @@ app.controller('HolidaysCtrl', [
 ]);
 
 app.controller('HoursCtrl', [
-  '$scope', 'Hours', 'Counterparty', '$localStorage', 'datepickerDecorator', function($scope, Hours, Counterparty, $localStorage, datepickerDecorator) {
+  '$scope', 'Hours', 'Counterparty', '$localStorage', 'datepickerDecorator', 'hourDecorator', function($scope, Hours, Counterparty, $localStorage, datepickerDecorator, hourDecorator) {
+    var init;
     datepickerDecorator($scope);
-    $scope.hour = {};
-    $scope.hour.errors = {};
-    $scope.hour.month = moment().format('MM-YYYY');
-    $scope.customers = Counterparty.customers({
-      scope: 'active'
-    });
-    $scope.vendor = $localStorage.currentVendor;
-    $scope.hours = Hours.query({
-      vendor_id: $scope.vendor.id
-    });
-    $scope.edit = false;
+    hourDecorator($scope);
+    init = function() {
+      $scope.hour = {};
+      $scope.hour.errors = {};
+      $scope.hour.month = moment().format('MM-YYYY');
+      $scope.getWorkingDays($scope.hour.month);
+      $scope.$watch('workingDays', function(value) {
+        return $scope.hour.hours = $scope.getWorkingHours();
+      });
+      $scope.vendor = $localStorage.currentVendor;
+      $scope.hour.customer_id = $scope.vendor.customer_id;
+      $scope.customers = Counterparty.customers({
+        scope: 'active'
+      });
+      $scope.hours = Hours.query({
+        vendor_id: $scope.vendor.id
+      });
+      return $scope.edit = false;
+    };
     $scope.add = function() {
       return Hours.save($scope.hour, function(hour) {
         $scope.hours.push(hour);
@@ -291,7 +327,7 @@ app.controller('HoursCtrl', [
         return $scope.hours.splice(index, 1);
       });
     };
-    return $scope.update = function(hour_id, data) {
+    $scope.update = function(hour_id, data) {
       return Hours.update({
         id: hour_id
       }, {
@@ -300,6 +336,7 @@ app.controller('HoursCtrl', [
         }
       }, function() {}, function(response) {});
     };
+    return init();
   }
 ]);
 
@@ -442,6 +479,23 @@ app.factory('datepickerDecorator', [
   }
 ]);
 
+app.factory('hourDecorator', [
+  'Hours', 'WorkDay', function(Hours, WorkDay) {
+    return function($scope) {
+      $scope.getWorkingDays = function(value) {
+        return WorkDay.get({
+          date: value
+        }, function(response) {
+          return $scope.workingDays = response.count;
+        });
+      };
+      return $scope.getWorkingHours = function() {
+        return $scope.workingHours = $scope.workingDays * 8;
+      };
+    };
+  }
+]);
+
 app.factory('Register', [
   '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
     return $resource(apiEndpoint + '/registers/:id', {
@@ -520,5 +574,11 @@ app.factory('Counterparty', [
         method: 'PUT'
       }
     });
+  }
+]);
+
+app.factory('WorkDay', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/work_days/');
   }
 ]);
