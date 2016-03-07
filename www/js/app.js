@@ -158,6 +158,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   });
 });
 
+app.constant('apiEndpoint', 'http://localhost:3000');
+
 app.config([
   '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
     $authProvider.withCredentials = true;
@@ -179,8 +181,6 @@ app.config([
     return AuthProvider.resourceName('admin');
   }
 ]);
-
-app.constant('apiEndpoint', 'http://localhost:3000');
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -284,8 +284,17 @@ app.controller('CounterpartyCtrl', [
 ]);
 
 app.controller('HolidaysCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in holidays controller");
+  '$scope', 'Holiday', function($scope, Holiday) {
+    var init;
+    init = function() {
+      $scope.holiday = {};
+      $scope.holiday.errors = {};
+      $scope.currentYear = moment().format('YYYY');
+      return $scope.holidays = Holiday.query({
+        year: $scope.currentYear
+      });
+    };
+    return init();
   }
 ]);
 
@@ -580,5 +589,17 @@ app.factory('Counterparty', [
 app.factory('WorkDay', [
   '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
     return $resource(apiEndpoint + '/work_days/');
+  }
+]);
+
+app.factory('Holiday', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/holidays/:id/:action', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 ]);
