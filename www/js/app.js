@@ -58,7 +58,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: vendorLoginRequired
-    }
+    },
+    cache: false
   }).state('vendor_profile.calc', {
     url: '/calc',
     views: {
@@ -69,7 +70,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: vendorLoginRequired
-    }
+    },
+    cache: false
   }).state('vendor_profile.holidays', {
     url: '/our-holidays',
     views: {
@@ -80,7 +82,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: vendorLoginRequired
-    }
+    },
+    cache: false
   }).state('vendor_password_reset', {
     url: 'vendor_password_reset/new',
     templateUrl: 'templates/vendor_password_reset.html',
@@ -128,8 +131,34 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     resolve: {
       loginRequired: adminLoginRequired
     }
+  }).state('admin.counterparty', {
+    url: '/counterparty',
+    cache: false,
+    views: {
+      'counterparty-tab': {
+        templateUrl: 'templates/counterparty.html',
+        controller: 'CounterpartyCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    }
+  }).state('admin.counterparty-new', {
+    url: '/counterparty/new',
+    cache: false,
+    views: {
+      'counterparty-tab': {
+        templateUrl: 'templates/counterparty-new.html',
+        controller: 'CounterpartyNewCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    }
   });
 });
+
+app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
 
 app.config([
   '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
@@ -153,7 +182,38 @@ app.config([
   }
 ]);
 
-app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -405,39 +465,6 @@ app.controller('VendorProfileCtrl', [
         $state.go('vendor_login');
         return $localStorage.currentVendor = null;
       });
-    };
-  }
-]);
-
-app.factory('datepickerDecorator', [
-  function() {
-    return function($scope) {
-      var datePickerCallback;
-      datePickerCallback = function(val) {
-        if (val != null) {
-          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-        }
-      };
-      return $scope.datepicker = {
-        titleLabel: 'Title',
-        todayLabel: 'Today',
-        closeLabel: 'Close',
-        setLabel: 'Set',
-        setButtonType: 'button-positive',
-        todayButtonType: 'button-stable',
-        closeButtonType: 'button-stable',
-        inputDate: new Date(),
-        mondayFirst: true,
-        templateType: 'popup',
-        showTodayButton: 'true',
-        modalHeaderColor: 'bar-stable',
-        modalFooterColor: 'bar-stable',
-        dateFormat: 'MM-yyyy',
-        closeOnSelect: true,
-        callback: function(val) {
-          return datePickerCallback(val);
-        }
-      };
     };
   }
 ]);

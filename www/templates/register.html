@@ -7,17 +7,17 @@
 <ion-content>
 
 	<div class="row header">
-	  <div class="col">Дата</div>
-		<div class="col">Стаття</div>
-		<div class="col">Контрагент</div>
-		<div class="col">Сума</div>
+	  <div class="border col">Дата</div>
+		<div class="border col">Стаття</div>
+		<div class="border col">Контрагент</div>
+		<div class="border col">Сума</div>
 	</div>
 
 	<div class="row register" ng-repeat="register in registers" ui-sref="admin.register_detail({registerId: register.id})">
-		<div class="col">{{register.date}}</div>
-		<div class="col">{{register.article.name}}</div>
-		<div class="col">{{register.counterparty.name}}</div>
-		<div class="col">{{register.value}}{{register.currency}}</div>
+		<div class="border col">{{register.date}}</div>
+		<div class="border col">{{register.article.name}}</div>
+		<div class="border col">{{register.counterparty.name}}</div>
+		<div class="border col">{{register.value}} {{register.currency}}</div>
 	</div>
 
 </ion-content>

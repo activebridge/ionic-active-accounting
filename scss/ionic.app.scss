@@ -44,21 +44,14 @@ input.hours-input {
   background-color: lightgrey;
 }
 
-.col {
+.border {
   border: solid 1px grey;
-  border-bottom-style: none;
   border-right-style: none;
 }
 
-.col {
+.border {
   &:last-child {
     border-right: solid 1px grey;
-  }
-}
-
-.row {
-  &:last-child .col {
-    border-bottom: solid 1px grey;
   }
 }
 
