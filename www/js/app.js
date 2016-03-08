@@ -455,56 +455,6 @@ app.controller('VendorProfileCtrl', [
   }
 ]);
 
-app.factory('datepickerDecorator', [
-  function() {
-    return function($scope) {
-      var datePickerCallback;
-      datePickerCallback = function(val) {
-        if (val != null) {
-          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-        }
-      };
-      return $scope.datepicker = {
-        titleLabel: 'Title',
-        todayLabel: 'Today',
-        closeLabel: 'Close',
-        setLabel: 'Set',
-        setButtonType: 'button-positive',
-        todayButtonType: 'button-stable',
-        closeButtonType: 'button-stable',
-        inputDate: new Date(),
-        mondayFirst: true,
-        templateType: 'popup',
-        showTodayButton: 'true',
-        modalHeaderColor: 'bar-stable',
-        modalFooterColor: 'bar-stable',
-        dateFormat: 'MM-yyyy',
-        closeOnSelect: true,
-        callback: function(val) {
-          return datePickerCallback(val);
-        }
-      };
-    };
-  }
-]);
-
-app.factory('hourDecorator', [
-  'Hours', 'WorkDay', function(Hours, WorkDay) {
-    return function($scope) {
-      $scope.getWorkingDays = function(value) {
-        return WorkDay.get({
-          date: value
-        }, function(response) {
-          return $scope.workingDays = response.count;
-        });
-      };
-      return $scope.getWorkingHours = function() {
-        return $scope.workingHours = $scope.workingDays * 8;
-      };
-    };
-  }
-]);
-
 app.factory('Register', [
   '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
     return $resource(apiEndpoint + '/registers/:id', {
@@ -601,5 +551,55 @@ app.factory('Holiday', [
         method: 'PUT'
       }
     });
+  }
+]);
+
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
+
+app.factory('hourDecorator', [
+  'Hours', 'WorkDay', function(Hours, WorkDay) {
+    return function($scope) {
+      $scope.getWorkingDays = function(value) {
+        return WorkDay.get({
+          date: value
+        }, function(response) {
+          return $scope.workingDays = response.count;
+        });
+      };
+      return $scope.getWorkingHours = function() {
+        return $scope.workingHours = $scope.workingDays * 8;
+      };
+    };
   }
 ]);
