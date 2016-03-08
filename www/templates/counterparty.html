@@ -1,0 +1,81 @@
+<ion-view view-title="Контрагенти">
+
+<ion-nav-buttons side="right">
+	<a class="button button-dark" ui-sref="admin.counterparty-new"> Додати </a>
+</ion-nav-buttons>
+
+<ion-content>
+
+  <ion-item class="item item-group"
+            ng-click="toggleGroup(customers)">
+    <i class="icon" ng-class="isGroupShown(customers) ? 'ion-minus' : 'ion-plus'"></i>
+    &nbsp;
+    Клієнти
+  </ion-item>
+
+	<div class="row header" ng-show="isGroupShown(customers)">
+		<div class="border col">Дата</div>
+		<div class="border col">Ім'я</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(customers)" ng-repeat="customer in customers" ui-sref="admin.counterparty-detail({counterpartyId: customer.id})">
+		<div class="border col">{{ customer.start_date }}</div>
+		<div class="border col">{{ customer.name }}</div>
+  </div>
+
+  <ion-item class="item item-group"
+            ng-click="toggleGroup(vendors)">
+    <i class="icon" ng-class="isGroupShown(vendors) ? 'ion-minus' : 'ion-plus'"></i>
+    &nbsp;
+    Постачальники
+  </ion-item>
+
+	<div class="row header" ng-show="isGroupShown(vendors)">
+		<div class="border col">Дата</div>
+		<div class="border col">Ім'я</div>
+		<div class="border col">Клієнт</div>
+	</div>
+
+  <div class="row highlight" ng-show="isGroupShown(vendors)" ng-repeat="vendor in vendors" ui-sref="admin.counterparty-detail({counterpartyId: vendor.id})">
+		<div class="border col">{{ vendor.start_date }}</div>
+    <div class="border col">{{ vendor.name }}</div>
+		<div class="border col">{{ vendor.customer.name }}</div>
+  </div>
+
+  <ion-item class="item item-group"
+            ng-click="toggleGroup(others)">
+    <i class="icon" ng-class="isGroupShown(others) ? 'ion-minus' : 'ion-plus'"></i>
+    &nbsp;
+    Інші
+  </ion-item>
+
+	<div class="row header" ng-show="isGroupShown(others)">
+		<div class="border col">Дата</div>
+		<div class="border col">Ім'я</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(others)" ng-repeat="other in others" ui-sref="admin.counterparty-detail({counterpartyId: other.id})">
+		<div class="border col">{{ other.start_date }}</div>
+    <div class="border col">{{ other.name }}</div>
+	</div>
+
+  <ion-item class="item item-group"
+            ng-click="toggleGroup(HRs)">
+    <i class="icon" ng-class="isGroupShown(HRs) ? 'ion-minus' : 'ion-plus'"></i>
+    &nbsp;
+    HR-и
+  </ion-item>
+
+	<div class="row header" ng-show="isGroupShown(HRs)">
+		<div class="border col">Дата</div>
+		<div class="border col">Ім'я</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(HRs)" ng-repeat="HR in HRs" ui-sref="admin.counterparty-detail({counterpartyId: HR.id})">
+		<div class="border col">{{ HR.start_date }}</div>
+		<div class="border col">{{ HR.name }}</div>
+	</div>
+
+</ion-content>
+
+</ion-view>
