@@ -1,0 +1,79 @@
+<ion-view view-title="Статті">
+
+<ion-nav-buttons side="right">
+	<a class="button button-dark" ui-sref="admin.article-new"> Додати </a>
+</ion-nav-buttons>
+
+<ion-content>
+
+	<ion-item class="item item-group"
+	          ng-click="toggleGroup(revenues)">
+	  <i class="icon" ng-class="isGroupShown(revenues) ? 'ion-minus' : 'ion-plus'"></i>
+	  &nbsp;
+	  Надходження
+	</ion-item>
+
+	<div class="row header" ng-show="isGroupShown(revenues)">
+		<div class="border col">Ім'я</div>
+		<div class="border col">Тип</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(revenues)" ng-repeat="article in articles | filter: { type: 'Revenue' }" ui-sref="admin.article-detail({articleId: article.id})">
+		<div class="border col">{{ article.name }}</div>
+		<div class="border col">{{ article.type }}</div>
+	</div>
+
+	<ion-item class="item item-group"
+						ng-click="toggleGroup(costs)">
+		<i class="icon" ng-class="isGroupShown(costs) ? 'ion-minus' : 'ion-plus'"></i>
+		&nbsp;
+		Витрати
+	</ion-item>
+
+	<div class="row header" ng-show="isGroupShown(costs)">
+		<div class="border col">Ім'я</div>
+		<div class="border col">Тип</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(costs)" ng-repeat="article in articles | filter: { type: 'Cost' }" ui-sref="admin.article-detail({articleId: article.id})">
+		<div class="border col">{{ article.name }}</div>
+		<div class="border col">{{ article.type }}</div>
+	</div>
+
+	<ion-item class="item item-group"
+						ng-click="toggleGroup(translations)">
+		<i class="icon" ng-class="isGroupShown(translations) ? 'ion-minus' : 'ion-plus'"></i>
+		&nbsp;
+		Трансляція
+	</ion-item>
+
+	<div class="row header" ng-show="isGroupShown(translations)">
+		<div class="border col">Ім'я</div>
+		<div class="border col">Тип</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(translations)" ng-repeat="article in articles | filter: { type: 'Translation' }" ui-sref="admin.article-detail({articleId: article.id})">
+		<div class="border col">{{ article.name }}</div>
+		<div class="border col">{{ article.type }}</div>
+	</div>
+
+	<ion-item class="item item-group"
+						ng-click="toggleGroup(loans)">
+		<i class="icon" ng-class="isGroupShown(loans) ? 'ion-minus' : 'ion-plus'"></i>
+		&nbsp;
+		Позика
+	</ion-item>
+
+	<div class="row header" ng-show="isGroupShown(loans)">
+		<div class="border col">Ім'я</div>
+		<div class="border col">Тип</div>
+	</div>
+
+	<div class="row highlight" ng-show="isGroupShown(loans)" ng-repeat="article in articles | filter: { type: 'Loan' }" ui-sref="admin.article-detail({articleId: article.id})">
+		<div class="border col">{{ article.name }}</div>
+		<div class="border col">{{ article.type }}</div>
+	</div>
+
+</ion-content>
+
+</ion-view>

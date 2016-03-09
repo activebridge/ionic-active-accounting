@@ -17,5 +17,6 @@ app.controller 'AdminLoginCtrl', [
       ), (error) ->
         alertPopup = $ionicPopup.alert(
           title: 'Login failed!'
-          template: 'Please check your credentials!')
+          template: 'Please check your credentials!'
+        )
 ]

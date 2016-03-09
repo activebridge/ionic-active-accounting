@@ -3,9 +3,23 @@ app.controller 'CounterpartyCtrl', [
   'Counterparty'
   ($scope, Counterparty) ->
 
+    $scope.customers = {}
+    $scope.vendors = {}
+    $scope.others = {}
+    $scope.HRs = {}
+
     $scope.loadCounterparties = ->
       Counterparty.query (response) ->
         $scope.counterparties = response
+
+    $scope.toggleGroup = (group) ->
+      if $scope.isGroupShown(group)
+        $scope.shownGroup = null
+      else
+        $scope.shownGroup = group
+
+    $scope.isGroupShown = (group) ->
+      $scope.shownGroup == group
 
     init = ->
       $scope.loadCounterparties()

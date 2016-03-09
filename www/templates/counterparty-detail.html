@@ -1,0 +1,48 @@
+<ion-view view-title="Редагувати контрагента">
+
+<ion-nav-buttons side="right">
+  <button class="button button-icon icon ion-trash-a" ng-click="deleteCounterparty(counterparty.id)"></button>
+</ion-nav-buttons>
+
+<ion-content>
+
+  <div class="list list-inset">
+
+    <label class="item item-input">
+      <div class="input-label positive">Ім'я</div>
+      <input type="text" ng-model="counterparty.name" required>
+    </label>
+
+    <label class="item item-input">
+      <div class="input-label positive">Дата</div>
+      <input type="date" ng-model="counterparty.start_date" required>
+    </label>
+
+    <label class="item item-input item-select">
+      <div class="input-label positive">Тип
+        <select ng-model="counterparty.type" ng-options='type as type for type in types'>
+        </select>
+      </div>
+    </label>
+
+    <label class="item item-input item-select" ng-show="isVendor()">
+      <div class="input-label positive">Клієнт
+        <select ng-model="counterparty.customer_id" ng-options="customer.id as customer.name for customer in activeCustomers">
+        </select>
+      </div>
+    </label>
+
+    <label class="item item-input" ng-show="hasEmail()">
+      <div class="input-label positive">Email</div>
+      <input type="email" ng-model="counterparty.email">
+    </label>
+
+    <button type="submit" class="button button-block button-positive" ng-click="updateCounterparty()">
+      Зберегти
+    </button>
+
+  </div>
+
+</ion-content>
+
+</ion-view>
