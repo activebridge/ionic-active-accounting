@@ -12,6 +12,6 @@ app.controller 'AdminCtrl', [
 
       Auth.logout(config).then ((oldUser) ->
         $localStorage.currentAdmin = null;
-        $state.go 'admin_login'
+        $state.go 'admin-login'
       ), (error) ->
 ]

@@ -6,7 +6,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     if $auth.isAuthenticated()
       deferred.resolve()
     else
-      $state.go 'vendor_login'
+      $state.go 'vendor-login'
     deferred.promise
 
   adminLoginRequired = ($q, $state, $localStorage) ->
@@ -15,7 +15,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     if angular.isObject($localStorage.currentAdmin)
       deferred.resolve()
     else
-      $state.go 'admin_login'
+      $state.go 'admin-login'
     deferred.promise
 
   $ionicConfigProvider.tabs.position 'bottom'
@@ -23,18 +23,18 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
 
   $urlRouterProvider.otherwise '/vendor_login'
 
-  $stateProvider.state 'vendor_login', {
+  $stateProvider.state 'vendor-login', {
     url: '/vendor_login'
     templateUrl: 'templates/vendor_login.html'
     controller: 'VendorLoginCtrl'
   }
-  .state 'vendor_profile', {
+  .state 'vendor-profile', {
     url: '/vendor_profile'
     abstract: true
     templateUrl: 'templates/vendor_profile.html'
     controller: 'VendorProfileCtrl'
   }
-  .state 'vendor_profile.hours', {
+  .state 'vendor-profile.hours', {
     url: '/hours'
     views: 'hours-tab':
       templateUrl: 'templates/hours.html'
@@ -43,7 +43,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       loginRequired: vendorLoginRequired
     cache: false
   }
-  .state 'vendor_profile.calc', {
+  .state 'vendor-profile.calc', {
     url: '/calc'
     views: 'calc-tab':
       templateUrl: 'templates/calc.html'
@@ -52,7 +52,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       loginRequired: vendorLoginRequired
     cache: false
   }
-  .state 'vendor_profile.holidays', {
+  .state 'vendor-profile.holidays', {
     url: '/our-holidays'
     views: 'holidays-tab':
       templateUrl: 'templates/holidays.html'
@@ -61,12 +61,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       loginRequired: vendorLoginRequired
     cache: false
   }
-  .state 'vendor_password_reset', {
+  .state 'vendor-password-reset', {
     url: 'vendor_password_reset/new'
     templateUrl: 'templates/vendor_password_reset.html'
     controller: 'VendorPasswordResetCtrl'
   }
-  .state 'admin_login', {
+  .state 'admin-login', {
     url: '/admin_login'
     templateUrl: 'templates/admin_login.html'
     controller: 'AdminLoginCtrl'
@@ -86,7 +86,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     resolve:
       loginRequired: adminLoginRequired
   }
-  .state 'admin.register_new', {
+  .state 'admin.register-new', {
     url: '/register/new'
     views: 'register-tab':
       templateUrl: 'templates/register-new.html'
@@ -94,7 +94,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     resolve:
       loginRequired: adminLoginRequired
   }
-  .state 'admin.register_detail', {
+  .state 'admin.register-detail', {
     url: '/register/:registerId'
     views: 'register-tab':
       templateUrl: 'templates/register-detail.html'

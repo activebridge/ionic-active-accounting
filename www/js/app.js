@@ -21,7 +21,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     if ($auth.isAuthenticated()) {
       deferred.resolve();
     } else {
-      $state.go('vendor_login');
+      $state.go('vendor-login');
     }
     return deferred.promise;
   };
@@ -32,23 +32,23 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     if (angular.isObject($localStorage.currentAdmin)) {
       deferred.resolve();
     } else {
-      $state.go('admin_login');
+      $state.go('admin-login');
     }
     return deferred.promise;
   };
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   $urlRouterProvider.otherwise('/vendor_login');
-  return $stateProvider.state('vendor_login', {
+  return $stateProvider.state('vendor-login', {
     url: '/vendor_login',
     templateUrl: 'templates/vendor_login.html',
     controller: 'VendorLoginCtrl'
-  }).state('vendor_profile', {
+  }).state('vendor-profile', {
     url: '/vendor_profile',
     abstract: true,
     templateUrl: 'templates/vendor_profile.html',
     controller: 'VendorProfileCtrl'
-  }).state('vendor_profile.hours', {
+  }).state('vendor-profile.hours', {
     url: '/hours',
     views: {
       'hours-tab': {
@@ -60,7 +60,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       loginRequired: vendorLoginRequired
     },
     cache: false
-  }).state('vendor_profile.calc', {
+  }).state('vendor-profile.calc', {
     url: '/calc',
     views: {
       'calc-tab': {
@@ -72,7 +72,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       loginRequired: vendorLoginRequired
     },
     cache: false
-  }).state('vendor_profile.holidays', {
+  }).state('vendor-profile.holidays', {
     url: '/our-holidays',
     views: {
       'holidays-tab': {
@@ -84,11 +84,11 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       loginRequired: vendorLoginRequired
     },
     cache: false
-  }).state('vendor_password_reset', {
+  }).state('vendor-password-reset', {
     url: 'vendor_password_reset/new',
     templateUrl: 'templates/vendor_password_reset.html',
     controller: 'VendorPasswordResetCtrl'
-  }).state('admin_login', {
+  }).state('admin-login', {
     url: '/admin_login',
     templateUrl: 'templates/admin_login.html',
     controller: 'AdminLoginCtrl'
@@ -109,7 +109,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     resolve: {
       loginRequired: adminLoginRequired
     }
-  }).state('admin.register_new', {
+  }).state('admin.register-new', {
     url: '/register/new',
     views: {
       'register-tab': {
@@ -120,7 +120,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     resolve: {
       loginRequired: adminLoginRequired
     }
-  }).state('admin.register_detail', {
+  }).state('admin.register-detail', {
     url: '/register/:registerId',
     views: {
       'register-tab': {
@@ -194,7 +194,7 @@ app.controller('AdminCtrl', [
       };
       return Auth.logout(config).then((function(oldUser) {
         $localStorage.currentAdmin = null;
-        return $state.go('admin_login');
+        return $state.go('admin-login');
       }), function(error) {});
     };
   }
@@ -422,7 +422,7 @@ app.controller('VendorLoginCtrl', [
     $scope.vendor = {};
     return $scope.submit = function() {
       return $auth.login($scope.vendor).then(function(response) {
-        $state.go('vendor_profile.hours');
+        $state.go('vendor-profile.hours');
         return $localStorage.currentVendor = response.data;
       })['catch'](function(error) {
         var alertPopup;
@@ -448,7 +448,7 @@ app.controller('VendorProfileCtrl', [
     };
     return $scope.logout = function() {
       return $auth.logout().then(function() {
-        $state.go('vendor_login');
+        $state.go('vendor-login');
         return $localStorage.currentVendor = null;
       });
     };

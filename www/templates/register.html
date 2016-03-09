@@ -1,7 +1,7 @@
 <ion-view view-title="Реєстр">
 
 <ion-nav-buttons side="right">
-	<a class="button button-dark" ui-sref="admin.register_new"> Додати </a>
+	<a class="button button-dark" ui-sref="admin.register-new"> Додати </a>
 </ion-nav-buttons>
 
 <ion-content>
@@ -13,7 +13,7 @@
 		<div class="border col">Сума</div>
 	</div>
 
-	<div class="row register" ng-repeat="register in registers" ui-sref="admin.register_detail({registerId: register.id})">
+	<div class="row register" ng-repeat="register in registers" ui-sref="admin.register-detail({registerId: register.id})">
 		<div class="border col">{{register.date}}</div>
 		<div class="border col">{{register.article.name}}</div>
 		<div class="border col">{{register.counterparty.name}}</div>

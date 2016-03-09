@@ -10,7 +10,7 @@ app.controller 'VendorLoginCtrl', [
 
     $scope.submit = ->
       $auth.login($scope.vendor).then((response) ->
-        $state.go 'vendor_profile.hours'
+        $state.go 'vendor-profile.hours'
         $localStorage.currentVendor = response.data
       )['catch'] (error) ->
         alertPopup = $ionicPopup.alert(

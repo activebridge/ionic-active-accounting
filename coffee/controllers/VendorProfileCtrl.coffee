@@ -11,7 +11,7 @@ app.controller 'VendorProfileCtrl', [
 
     $scope.logout = ->
       $auth.logout().then ->
-        $state.go 'vendor_login'
+        $state.go 'vendor-login'
         $localStorage.currentVendor = null
 
 ]
