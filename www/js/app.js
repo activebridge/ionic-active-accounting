@@ -99,7 +99,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     controller: 'AdminCtrl'
   }).state('admin.register', {
     url: '/register',
-    cache: false,
     views: {
       'register-tab': {
         templateUrl: 'templates/register.html',
@@ -108,7 +107,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.register_new', {
     url: '/register/new',
     views: {
@@ -119,7 +119,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.register_detail', {
     url: '/register/:registerId',
     views: {
@@ -130,10 +131,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.counterparty', {
     url: '/counterparty',
-    cache: false,
     views: {
       'counterparty-tab': {
         templateUrl: 'templates/counterparty.html',
@@ -142,10 +143,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.counterparty-new', {
     url: '/counterparty/new',
-    cache: false,
     views: {
       'counterparty-tab': {
         templateUrl: 'templates/counterparty-new.html',
@@ -154,7 +155,20 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
+  }).state('admin.counterparty-detail', {
+    url: '/counterparty/:counterpartyId',
+    views: {
+      'counterparty-tab': {
+        templateUrl: 'templates/counterparty-detail.html',
+        controller: 'CounterpartyDetailCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    },
+    cache: false
   });
 });
 
@@ -271,15 +285,94 @@ app.controller('CalcCtrl', [
 app.controller('CounterpartyCtrl', [
   '$scope', 'Counterparty', function($scope, Counterparty) {
     var init;
+    $scope.counterparties = {};
+    $scope.customers = {};
+    $scope.vendors = {};
+    $scope.others = {};
+    $scope.HRs = {};
     $scope.loadCounterparties = function() {
-      return Counterparty.query(function(response) {
+      Counterparty.query(function(response) {
         return $scope.counterparties = response;
       });
+      $scope.customers = Counterparty.query({
+        group: 'Customer'
+      });
+      $scope.vendors = Counterparty.query({
+        group: 'Vendor'
+      });
+      $scope.others = Counterparty.query({
+        group: 'Other'
+      });
+      return $scope.HRs = Counterparty.query({
+        group: 'HR'
+      });
+    };
+    $scope.toggleGroup = function(group) {
+      if ($scope.isGroupShown(group)) {
+        return $scope.shownGroup = null;
+      } else {
+        return $scope.shownGroup = group;
+      }
+    };
+    $scope.isGroupShown = function(group) {
+      return $scope.shownGroup === group;
     };
     init = function() {
       return $scope.loadCounterparties();
     };
     return init();
+  }
+]);
+
+app.controller('CounterpartyDetailCtrl', [
+  '$scope', '$state', '$ionicPopup', '$stateParams', 'Counterparty', function($scope, $state, $ionicPopup, $stateParams, Counterparty) {
+    var init;
+    $scope.getCounterparty = function() {
+      return Counterparty.get({
+        id: $stateParams.counterpartyId
+      }, function(response) {
+        $scope.counterparty = response;
+        return $scope.counterparty.start_date = new Date($scope.counterparty.start_date);
+      });
+    };
+    $scope.deleteCounterparty = function(id) {
+      var confirmPopup;
+      confirmPopup = $ionicPopup.confirm({
+        title: 'Видалення',
+        template: 'Ви впевнені в своєму рішенні?'
+      });
+      return confirmPopup.then(function(response) {
+        if (response) {
+          return Counterparty["delete"]({
+            id: id
+          }, function() {
+            return $state.go('admin.counterparty');
+          });
+        }
+      });
+    };
+    $scope.updateCounterparty = function() {
+      return Counterparty.update($scope.counterparty, function() {
+        return $state.go('admin.counterparty');
+      });
+    };
+    init = function() {
+      return $scope.getCounterparty();
+    };
+    return init();
+  }
+]);
+
+app.controller('CounterpartyNewCtrl', [
+  '$scope', '$state', 'Counterparty', function($scope, $state, Counterparty) {
+    $scope.types = ['Customer', 'Vendor', 'Other', 'HR'];
+    $scope.counterparty = {};
+    return $scope.saveCounterparty = function() {
+      return Counterparty.save($scope.counterparty, function() {
+        $scope.counterparty.errors = {};
+        return $state.go('admin.counterparty');
+      });
+    };
   }
 ]);
 
@@ -454,6 +547,8 @@ app.controller('VendorProfileCtrl', [
     };
   }
 ]);
+
+app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
 
 app.factory('datepickerDecorator', [
   function() {

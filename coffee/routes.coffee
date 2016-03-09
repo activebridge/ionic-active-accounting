@@ -79,12 +79,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.register', {
     url: '/register'
-    cache: false
     views: 'register-tab':
       templateUrl: 'templates/register.html'
       controller: 'RegisterCtrl'
     resolve:
       loginRequired: adminLoginRequired
+    cache: false
   }
   .state 'admin.register_new', {
     url: '/register/new'
@@ -93,6 +93,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       controller: 'RegisterNewCtrl'
     resolve:
       loginRequired: adminLoginRequired
+    cache: false
   }
   .state 'admin.register_detail', {
     url: '/register/:registerId'
@@ -101,22 +102,32 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       controller: 'RegisterDetailCtrl'
     resolve:
       loginRequired: adminLoginRequired
+    cache: false
   }
   .state 'admin.counterparty', {
     url: '/counterparty'
-    cache: false
     views: 'counterparty-tab':
       templateUrl: 'templates/counterparty.html'
       controller: 'CounterpartyCtrl'
     resolve:
       loginRequired: adminLoginRequired
+    cache: false
   }
   .state 'admin.counterparty-new', {
     url: '/counterparty/new'
-    cache: false
     views: 'counterparty-tab':
       templateUrl: 'templates/counterparty-new.html'
       controller: 'CounterpartyNewCtrl'
     resolve:
       loginRequired: adminLoginRequired
+    cache: false
+  }
+  .state 'admin.counterparty-detail', {
+    url: '/counterparty/:counterpartyId'
+    views: 'counterparty-tab':
+      templateUrl: 'templates/counterparty-detail.html'
+      controller: 'CounterpartyDetailCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+    cache: false
   }
