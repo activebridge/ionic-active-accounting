@@ -4,14 +4,8 @@ app.controller 'ArticleDetailCtrl', [
   '$ionicPopup'
   '$stateParams'
   'Article'
-  ($scope, $state, $ionicPopup, $stateParams, Article) ->
-
-    $scope.types = [
-      'Revenue',
-      'Cost',
-      'Translation',
-      'Loan'
-    ]
+  'articleTypes'
+  ($scope, $state, $ionicPopup, $stateParams, Article, articleTypes) ->
 
     $scope.getArticle = ->
       Article.get
@@ -36,6 +30,7 @@ app.controller 'ArticleDetailCtrl', [
         $state.go 'admin.article'
 
     init = ->
+      $scope.types = articleTypes
       $scope.getArticle()
 
     init()
