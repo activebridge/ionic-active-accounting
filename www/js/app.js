@@ -284,8 +284,17 @@ app.controller('CounterpartyCtrl', [
 ]);
 
 app.controller('HolidaysCtrl', [
-  '$scope', function($scope) {
-    return console.log("I'm in holidays controller");
+  '$scope', 'Holiday', function($scope, Holiday) {
+    var init;
+    init = function() {
+      $scope.holiday = {};
+      $scope.holiday.errors = {};
+      $scope.currentYear = moment().format('YYYY');
+      return $scope.holidays = Holiday.query({
+        year: $scope.currentYear
+      });
+    };
+    return init();
   }
 ]);
 
@@ -580,5 +589,17 @@ app.factory('Counterparty', [
 app.factory('WorkDay', [
   '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
     return $resource(apiEndpoint + '/work_days/');
+  }
+]);
+
+app.factory('Holiday', [
+  '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
+    return $resource(apiEndpoint + '/holidays/:id/:action', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 ]);
