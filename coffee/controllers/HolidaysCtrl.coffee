@@ -1,5 +1,12 @@
 app.controller 'HolidaysCtrl', [
   '$scope'
-  ($scope) ->
-    console.log "I'm in holidays controller"
+  'Holiday'
+  ($scope, Holiday) ->
+    init = ->
+      $scope.holiday = {}
+      $scope.holiday.errors = {}
+      $scope.currentYear = moment().format('YYYY')
+      $scope.holidays = Holiday.query(year: $scope.currentYear)
+
+    init()
 ]
