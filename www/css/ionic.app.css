@@ -9751,11 +9751,12 @@ input.hours-input {
 
 .border {
   border: solid 1px grey;
-  border-right-style: none; }
+  border-right-style: none;
+  padding: 10px; }
 
 .border:last-child {
   border-right: solid 1px grey; }
 
-.register:active {
+.highlight:active {
   border-color: #ccc;
   background-color: #D9D9D9; }

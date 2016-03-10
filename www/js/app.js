@@ -208,6 +208,12 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   });
 });
 
+app.constant('articleTypes', ['Revenue', 'Cost', 'Translation', 'Loan']);
+
+app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
+
+app.constant('counterpartyTypes', ['Customer', 'Vendor', 'Other', 'HR']);
+
 app.config([
   '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
     $authProvider.withCredentials = true;
@@ -227,62 +233,6 @@ app.config([
     AuthProvider.loginPath(apiEndpoint + '/admins/sign_in.json');
     AuthProvider.logoutPath(apiEndpoint + '/admins/sign_out.json');
     return AuthProvider.resourceName('admin');
-  }
-]);
-
-app.constant('articleTypes', ['Revenue', 'Cost', 'Translation', 'Loan']);
-
-app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
-
-app.constant('counterpartyTypes', ['Customer', 'Vendor', 'Other', 'HR']);
-
-app.factory('datepickerDecorator', [
-  function() {
-    return function($scope) {
-      var datePickerCallback;
-      datePickerCallback = function(val) {
-        if (val != null) {
-          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-        }
-      };
-      return $scope.datepicker = {
-        titleLabel: 'Title',
-        todayLabel: 'Today',
-        closeLabel: 'Close',
-        setLabel: 'Set',
-        setButtonType: 'button-positive',
-        todayButtonType: 'button-stable',
-        closeButtonType: 'button-stable',
-        inputDate: new Date(),
-        mondayFirst: true,
-        templateType: 'popup',
-        showTodayButton: 'true',
-        modalHeaderColor: 'bar-stable',
-        modalFooterColor: 'bar-stable',
-        dateFormat: 'MM-yyyy',
-        closeOnSelect: true,
-        callback: function(val) {
-          return datePickerCallback(val);
-        }
-      };
-    };
-  }
-]);
-
-app.factory('hourDecorator', [
-  'Hours', 'WorkDay', function(Hours, WorkDay) {
-    return function($scope) {
-      $scope.getWorkingDays = function(value) {
-        return WorkDay.get({
-          date: value
-        }, function(response) {
-          return $scope.workingDays = response.count;
-        });
-      };
-      return $scope.getWorkingHours = function() {
-        return $scope.workingHours = $scope.workingDays * 8;
-      };
-    };
   }
 ]);
 
@@ -533,10 +483,21 @@ app.controller('CounterpartyNewCtrl', [
         return $state.go('admin.counterparty');
       });
     };
+    $scope.isVendor = function() {
+      var ref;
+      return ((ref = $scope.counterparty) != null ? ref.type : void 0) === 'Vendor';
+    };
+    $scope.hasEmail = function() {
+      var ref, ref1;
+      return ((ref = $scope.counterparty) != null ? ref.type : void 0) === 'Vendor' || ((ref1 = $scope.counterparty) != null ? ref1.type : void 0) === 'HR';
+    };
     init = function() {
       $scope.counterparty = {};
       $scope.types = counterpartyTypes;
-      return $scope.getCounterparty();
+      return $scope.activeCustomers = Counterparty.query({
+        scope: 'active',
+        group: 'Customer'
+      });
     };
     return init();
   }
@@ -710,6 +671,56 @@ app.controller('VendorProfileCtrl', [
         $state.go('vendor-login');
         return $localStorage.currentVendor = null;
       });
+    };
+  }
+]);
+
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
+
+app.factory('hourDecorator', [
+  'Hours', 'WorkDay', function(Hours, WorkDay) {
+    return function($scope) {
+      $scope.getWorkingDays = function(value) {
+        return WorkDay.get({
+          date: value
+        }, function(response) {
+          return $scope.workingDays = response.count;
+        });
+      };
+      return $scope.getWorkingHours = function() {
+        return $scope.workingHours = $scope.workingDays * 8;
+      };
     };
   }
 ]);
