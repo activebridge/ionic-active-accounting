@@ -3,19 +3,15 @@ app.controller 'HoursCtrl', [
   'Hours'
   'Counterparty'
   '$localStorage'
-  'datepickerDecorator'
   'hourDecorator'
-  ($scope, Hours, Counterparty, $localStorage, datepickerDecorator, hourDecorator) ->
-    datepickerDecorator($scope)
+  ($scope, Hours, Counterparty, $localStorage, hourDecorator) ->
     hourDecorator($scope)
 
     init = ->
       $scope.hour = {}
       $scope.hour.errors = {}
-      $scope.hour.month = moment().format('MM-YYYY')
-      $scope.getWorkingDays($scope.hour.month)
-      $scope.$watch 'workingDays', (value) ->
-        $scope.hour.hours = $scope.getWorkingHours()
+      $scope.hour.month = new Date()
+      $scope.workDays($scope.hour.month)
       $scope.vendor = $localStorage.currentVendor
       $scope.hour.customer_id = $scope.vendor.customer_id
       $scope.customers = Counterparty.customers(scope: 'active')
@@ -41,6 +37,11 @@ app.controller 'HoursCtrl', [
         () ->
         (response) ->
       )
+
+    $scope.workDays = (month) ->
+      $scope.getWorkingDays(month)
+      $scope.$watch 'workingDays', (value) ->
+        $scope.hour.hours = $scope.getWorkingHours()
 
     init()
 ]
