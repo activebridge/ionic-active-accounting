@@ -3,11 +3,6 @@ app.controller 'ArticleCtrl', [
   'Article'
   ($scope, Article) ->
 
-    $scope.revenues = {}
-    $scope.costs = {}
-    $scope.translations = {}
-    $scope.loans = {}
-
     $scope.loadArticles = ->
       Article.query (response) ->
         $scope.articles = response
@@ -22,6 +17,10 @@ app.controller 'ArticleCtrl', [
       $scope.shownGroup == group
 
     init = ->
+      $scope.revenues = {}
+      $scope.costs = {}
+      $scope.translations = {}
+      $scope.loans = {}
       $scope.loadArticles()
 
     init()

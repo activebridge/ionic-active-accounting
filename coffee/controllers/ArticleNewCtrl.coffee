@@ -2,16 +2,8 @@ app.controller 'ArticleNewCtrl', [
   '$scope'
   '$state'
   'Article'
-  ($scope, $state, Article) ->
-
-    $scope.types = [
-      'Revenue',
-      'Cost',
-      'Translation',
-      'Loan'
-    ]
-
-    $scope.article = {}
+  'articleTypes'
+  ($scope, $state, Article, articleTypes) ->
 
     $scope.saveArticle = ->
       Article.save($scope.article
@@ -19,4 +11,10 @@ app.controller 'ArticleNewCtrl', [
         $scope.article.errors = {}
         $state.go 'admin.article'
       )
+
+    init = ->
+      $scope.article = {}
+      $scope.types = articleTypes
+
+    init()
 ]

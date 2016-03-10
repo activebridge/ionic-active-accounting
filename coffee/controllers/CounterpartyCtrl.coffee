@@ -3,11 +3,6 @@ app.controller 'CounterpartyCtrl', [
   'Counterparty'
   ($scope, Counterparty) ->
 
-    $scope.customers = {}
-    $scope.vendors = {}
-    $scope.others = {}
-    $scope.HRs = {}
-
     $scope.loadCounterparties = ->
       Counterparty.query (response) ->
         $scope.counterparties = response
@@ -22,6 +17,10 @@ app.controller 'CounterpartyCtrl', [
       $scope.shownGroup == group
 
     init = ->
+      $scope.customers = {}
+      $scope.vendors = {}
+      $scope.others = {}
+      $scope.HRs = {}
       $scope.loadCounterparties()
 
     init()
