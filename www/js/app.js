@@ -99,7 +99,6 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     controller: 'AdminCtrl'
   }).state('admin.register', {
     url: '/register',
-    cache: false,
     views: {
       'register-tab': {
         templateUrl: 'templates/register.html',
@@ -108,7 +107,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.register-new', {
     url: '/register/new',
     views: {
@@ -119,7 +119,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.register-detail', {
     url: '/register/:registerId',
     views: {
@@ -130,10 +131,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.counterparty', {
     url: '/counterparty',
-    cache: false,
     views: {
       'counterparty-tab': {
         templateUrl: 'templates/counterparty.html',
@@ -142,10 +143,10 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
   }).state('admin.counterparty-new', {
     url: '/counterparty/new',
-    cache: false,
     views: {
       'counterparty-tab': {
         templateUrl: 'templates/counterparty-new.html',
@@ -154,33 +155,114 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     },
     resolve: {
       loginRequired: adminLoginRequired
-    }
+    },
+    cache: false
+  }).state('admin.counterparty-detail', {
+    url: '/counterparty/:counterpartyId',
+    views: {
+      'counterparty-tab': {
+        templateUrl: 'templates/counterparty-detail.html',
+        controller: 'CounterpartyDetailCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    },
+    cache: false
+  }).state('admin.article', {
+    url: '/articles',
+    views: {
+      'article-tab': {
+        templateUrl: 'templates/article.html',
+        controller: 'ArticleCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    },
+    cache: false
+  }).state('admin.article-new', {
+    url: '/article/new',
+    views: {
+      'article-tab': {
+        templateUrl: 'templates/article-new.html',
+        controller: 'ArticleNewCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    },
+    cache: false
+  }).state('admin.article-detail', {
+    url: '/article/:articleId',
+    views: {
+      'article-tab': {
+        templateUrl: 'templates/article-detail.html',
+        controller: 'ArticleDetailCtrl'
+      }
+    },
+    resolve: {
+      loginRequired: adminLoginRequired
+    },
+    cache: false
   });
 });
 
-app.config([
-  '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
-    $authProvider.withCredentials = true;
-    $authProvider.httpInterceptor = true;
-    $authProvider.baseUrl = apiEndpoint;
-    $authProvider.loginUrl = '/vendor_login.json';
-    $authProvider.tokenName = 'auth_token';
-    $authProvider.tokenPrefix = 'satellizer';
-    $authProvider.authHeader = 'Authorization';
-    $authProvider.authToken = 'Bearer';
-    return $authProvider.cordova = true;
-  }
-]);
-
-app.config([
-  'AuthProvider', 'apiEndpoint', function(AuthProvider, apiEndpoint) {
-    AuthProvider.loginPath(apiEndpoint + '/admins/sign_in.json');
-    AuthProvider.logoutPath(apiEndpoint + '/admins/sign_out.json');
-    return AuthProvider.resourceName('admin');
-  }
-]);
+app.constant('articleTypes', ['Revenue', 'Cost', 'Translation', 'Loan']);
 
 app.constant('apiEndpoint', 'http://accounting.active-bridge.com');
+
+app.constant('counterpartyTypes', ['Customer', 'Vendor', 'Other', 'HR']);
+
+app.factory('datepickerDecorator', [
+  function() {
+    return function($scope) {
+      var datePickerCallback;
+      datePickerCallback = function(val) {
+        if (val != null) {
+          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
+        }
+      };
+      return $scope.datepicker = {
+        titleLabel: 'Title',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        setLabel: 'Set',
+        setButtonType: 'button-positive',
+        todayButtonType: 'button-stable',
+        closeButtonType: 'button-stable',
+        inputDate: new Date(),
+        mondayFirst: true,
+        templateType: 'popup',
+        showTodayButton: 'true',
+        modalHeaderColor: 'bar-stable',
+        modalFooterColor: 'bar-stable',
+        dateFormat: 'MM-yyyy',
+        closeOnSelect: true,
+        callback: function(val) {
+          return datePickerCallback(val);
+        }
+      };
+    };
+  }
+]);
+
+app.factory('hourDecorator', [
+  'Hours', 'WorkDay', function(Hours, WorkDay) {
+    return function($scope) {
+      $scope.getWorkingDays = function(value) {
+        return WorkDay.get({
+          date: value
+        }, function(response) {
+          return $scope.workingDays = response.count;
+        });
+      };
+      return $scope.getWorkingHours = function() {
+        return $scope.workingHours = $scope.workingDays * 8;
+      };
+    };
+  }
+]);
 
 app.controller('AdminCtrl', [
   '$scope', '$state', 'Auth', '$localStorage', function($scope, $state, Auth, $localStorage) {
@@ -232,8 +314,78 @@ app.controller('ArticleCtrl', [
         return $scope.articles = response;
       });
     };
+    $scope.toggleGroup = function(group) {
+      if ($scope.isGroupShown(group)) {
+        return $scope.shownGroup = null;
+      } else {
+        return $scope.shownGroup = group;
+      }
+    };
+    $scope.isGroupShown = function(group) {
+      return $scope.shownGroup === group;
+    };
     init = function() {
+      $scope.revenues = {};
+      $scope.costs = {};
+      $scope.translations = {};
+      $scope.loans = {};
       return $scope.loadArticles();
+    };
+    return init();
+  }
+]);
+
+app.controller('ArticleDetailCtrl', [
+  '$scope', '$state', '$ionicPopup', '$stateParams', 'Article', 'articleTypes', function($scope, $state, $ionicPopup, $stateParams, Article, articleTypes) {
+    var init;
+    $scope.getArticle = function() {
+      return Article.get({
+        id: $stateParams.articleId
+      }, function(response) {
+        return $scope.article = response;
+      });
+    };
+    $scope.deleteArticle = function(id) {
+      var confirmPopup;
+      confirmPopup = $ionicPopup.confirm({
+        title: 'Видалення',
+        template: 'Ви впевнені в своєму рішенні?'
+      });
+      return confirmPopup.then(function(response) {
+        if (response) {
+          return Article["delete"]({
+            id: id
+          }, function() {
+            return $state.go('admin.article');
+          });
+        }
+      });
+    };
+    $scope.updateArticle = function() {
+      return Article.update($scope.article, function() {
+        return $state.go('admin.article');
+      });
+    };
+    init = function() {
+      $scope.types = articleTypes;
+      return $scope.getArticle();
+    };
+    return init();
+  }
+]);
+
+app.controller('ArticleNewCtrl', [
+  '$scope', '$state', 'Article', 'articleTypes', function($scope, $state, Article, articleTypes) {
+    var init;
+    $scope.saveArticle = function() {
+      return Article.save($scope.article, function() {
+        $scope.article.errors = {};
+        return $state.go('admin.article');
+      });
+    };
+    init = function() {
+      $scope.article = {};
+      return $scope.types = articleTypes;
     };
     return init();
   }
@@ -276,8 +428,104 @@ app.controller('CounterpartyCtrl', [
         return $scope.counterparties = response;
       });
     };
+    $scope.toggleGroup = function(group) {
+      if ($scope.isGroupShown(group)) {
+        return $scope.shownGroup = null;
+      } else {
+        return $scope.shownGroup = group;
+      }
+    };
+    $scope.isGroupShown = function(group) {
+      return $scope.shownGroup === group;
+    };
     init = function() {
+      $scope.customers = {};
+      $scope.vendors = {};
+      $scope.others = {};
+      $scope.HRs = {};
       return $scope.loadCounterparties();
+    };
+    return init();
+  }
+]);
+
+app.controller('CounterpartyDetailCtrl', [
+  '$scope', '$state', '$ionicPopup', '$stateParams', 'Counterparty', 'counterpartyTypes', function($scope, $state, $ionicPopup, $stateParams, Counterparty, counterpartyTypes) {
+    var init;
+    $scope.getCounterparty = function() {
+      return Counterparty.get({
+        id: $stateParams.counterpartyId
+      }, function(response) {
+        $scope.counterparty = response;
+        $scope.counterparty.customer_id = $scope.counterparty.customer.id;
+        $scope.counterparty.start_date = new Date($scope.counterparty.start_date);
+        return $scope.activeCustomers = Counterparty.query({
+          scope: 'active',
+          group: 'Customer'
+        });
+      });
+    };
+    $scope.deleteCounterparty = function(id) {
+      var confirmPopup;
+      confirmPopup = $ionicPopup.confirm({
+        title: 'Видалення',
+        template: 'Ви впевнені в своєму рішенні?'
+      });
+      return confirmPopup.then(function(response) {
+        if (response) {
+          return Counterparty["delete"]({
+            id: id
+          }, function() {
+            return $state.go('admin.counterparty');
+          });
+        }
+      });
+    };
+    $scope.updateCounterparty = function() {
+      return Counterparty.update($scope.counterparty, function() {
+        return $state.go('admin.counterparty');
+      });
+    };
+    $scope.isVendor = function() {
+      var ref;
+      return ((ref = $scope.counterparty) != null ? ref.type : void 0) === 'Vendor';
+    };
+    $scope.hasEmail = function() {
+      var ref, ref1;
+      return ((ref = $scope.counterparty) != null ? ref.type : void 0) === 'Vendor' || ((ref1 = $scope.counterparty) != null ? ref1.type : void 0) === 'HR';
+    };
+    init = function() {
+      $scope.types = counterpartyTypes;
+      return $scope.getCounterparty();
+    };
+    return init();
+  }
+]);
+
+app.controller('CounterpartyNewCtrl', [
+  '$scope', '$state', 'Counterparty', 'counterpartyTypes', function($scope, $state, Counterparty, counterpartyTypes) {
+    var init;
+    $scope.saveCounterparty = function() {
+      return Counterparty.save($scope.counterparty, function() {
+        $scope.counterparty.errors = {};
+        return $state.go('admin.counterparty');
+      });
+    };
+    $scope.isVendor = function() {
+      var ref;
+      return ((ref = $scope.counterparty) != null ? ref.type : void 0) === 'Vendor';
+    };
+    $scope.hasEmail = function() {
+      var ref, ref1;
+      return ((ref = $scope.counterparty) != null ? ref.type : void 0) === 'Vendor' || ((ref1 = $scope.counterparty) != null ? ref1.type : void 0) === 'HR';
+    };
+    init = function() {
+      $scope.counterparty = {};
+      $scope.types = counterpartyTypes;
+      return $scope.activeCustomers = Counterparty.query({
+        scope: 'active',
+        group: 'Customer'
+      });
     };
     return init();
   }
@@ -455,6 +703,28 @@ app.controller('VendorProfileCtrl', [
   }
 ]);
 
+app.config([
+  '$authProvider', '$httpProvider', 'apiEndpoint', function($authProvider, $httpProvider, apiEndpoint) {
+    $authProvider.withCredentials = true;
+    $authProvider.httpInterceptor = true;
+    $authProvider.baseUrl = apiEndpoint;
+    $authProvider.loginUrl = '/vendor_login.json';
+    $authProvider.tokenName = 'auth_token';
+    $authProvider.tokenPrefix = 'satellizer';
+    $authProvider.authHeader = 'Authorization';
+    $authProvider.authToken = 'Bearer';
+    return $authProvider.cordova = true;
+  }
+]);
+
+app.config([
+  'AuthProvider', 'apiEndpoint', function(AuthProvider, apiEndpoint) {
+    AuthProvider.loginPath(apiEndpoint + '/admins/sign_in.json');
+    AuthProvider.logoutPath(apiEndpoint + '/admins/sign_out.json');
+    return AuthProvider.resourceName('admin');
+  }
+]);
+
 app.factory('Register', [
   '$resource', 'apiEndpoint', function($resource, apiEndpoint) {
     return $resource(apiEndpoint + '/registers/:id', {
@@ -551,55 +821,5 @@ app.factory('Holiday', [
         method: 'PUT'
       }
     });
-  }
-]);
-
-app.factory('datepickerDecorator', [
-  function() {
-    return function($scope) {
-      var datePickerCallback;
-      datePickerCallback = function(val) {
-        if (val != null) {
-          return $scope.hour.month = val.getMonth() + 1 + "/" + val.getFullYear();
-        }
-      };
-      return $scope.datepicker = {
-        titleLabel: 'Title',
-        todayLabel: 'Today',
-        closeLabel: 'Close',
-        setLabel: 'Set',
-        setButtonType: 'button-positive',
-        todayButtonType: 'button-stable',
-        closeButtonType: 'button-stable',
-        inputDate: new Date(),
-        mondayFirst: true,
-        templateType: 'popup',
-        showTodayButton: 'true',
-        modalHeaderColor: 'bar-stable',
-        modalFooterColor: 'bar-stable',
-        dateFormat: 'MM-yyyy',
-        closeOnSelect: true,
-        callback: function(val) {
-          return datePickerCallback(val);
-        }
-      };
-    };
-  }
-]);
-
-app.factory('hourDecorator', [
-  'Hours', 'WorkDay', function(Hours, WorkDay) {
-    return function($scope) {
-      $scope.getWorkingDays = function(value) {
-        return WorkDay.get({
-          date: value
-        }, function(response) {
-          return $scope.workingDays = response.count;
-        });
-      };
-      return $scope.getWorkingHours = function() {
-        return $scope.workingHours = $scope.workingDays * 8;
-      };
-    };
   }
 ]);

@@ -4,14 +4,8 @@ app.controller 'CounterpartyDetailCtrl', [
   '$ionicPopup'
   '$stateParams'
   'Counterparty'
-  ($scope, $state, $ionicPopup, $stateParams, Counterparty) ->
-
-    $scope.types = [
-      'Customer',
-      'Vendor',
-      'Other',
-      'HR'
-    ]
+  'counterpartyTypes'
+  ($scope, $state, $ionicPopup, $stateParams, Counterparty, counterpartyTypes) ->
 
     $scope.getCounterparty = ->
       Counterparty.get
@@ -48,6 +42,7 @@ app.controller 'CounterpartyDetailCtrl', [
       $scope.counterparty?.type == 'Vendor' || $scope.counterparty?.type == 'HR'
 
     init = ->
+      $scope.types = counterpartyTypes
       $scope.getCounterparty()
 
     init()
