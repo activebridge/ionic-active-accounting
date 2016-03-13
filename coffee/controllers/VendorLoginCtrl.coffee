@@ -6,7 +6,11 @@ app.controller 'VendorLoginCtrl', [
   '$localStorage'
   ($scope, $state, $auth, $ionicPopup, $localStorage) ->
 
-    $scope.vendor = {}
+    $scope.redirectLoggedUser = ->
+      if $localStorage.currentVendor
+        $state.go 'vendor-profile.hours'
+      if $localStorage.currentAdmin
+        $state.go 'admin.register'
 
     $scope.submit = ->
       $auth.login($scope.vendor).then((response) ->
@@ -16,4 +20,10 @@ app.controller 'VendorLoginCtrl', [
         alertPopup = $ionicPopup.alert(
           title: 'Login failed!'
           template: 'Please check your credentials!')
+
+    init = ->
+      $scope.vendor = {}
+      $scope.redirectLoggedUser()
+
+    init()
 ]
