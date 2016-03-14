@@ -1,0 +1,24 @@
+<ion-view view-title="List of our holidays for {{current.year}} year">
+  <ion-content class="padding">
+
+    <form name='holidaysForm' ng-submit='add()' novalidate>
+      <div class="list list-inset">
+
+        <div class="assertive">{{ holiday.errors.name[0] }}</div>
+        <label class="item item-input">
+          <input type="text" placeholder="Name" ng-model='holiday.name' name='name' required>
+        </label>
+
+        <label class="item item-input">
+          <input type="date" placeholder="Date" ng-model="holiday.date" name="date" required>
+        </label>
+
+        <button type="submit" class="button button-block button-calm">
+          Add
+        </button>
+
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>
