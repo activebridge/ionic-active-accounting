@@ -17,9 +17,7 @@
 
         <div class="assertive">{{ hour.errors.month[0] }}</div>
         <label class="item item-input">
-          <ionic-datepicker input-obj="datepicker">
-            <input type="text" placeholder="Month" ng-model="hour.month" name="month" required>
-          </ionic-datepicker>
+          <input type="date" placeholder="Month" ng-model="hour.month" name="month" ng-change="workDays(hour.month)" required>
         </label>
 
         <button type="submit" ng-click='add()' class="button button-block button-calm">
