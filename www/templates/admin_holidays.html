@@ -1,0 +1,38 @@
+<ion-view view-title="List of our holidays for {{current.year}} year">
+  <ion-nav-buttons side="right">
+  	<a class="button button-dark" ui-sref="admin.holidays-new">New holiday</a>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-select">
+        <select class="select" ng-change="changeYear()" ng-options="year as year for year in years track by year" ng-model="current.year" required>
+        </select>
+      </label>
+    </div>
+
+    <div class="list">
+      <div class="row row-center item font-size-14" ng-repeat="holiday in holidays">
+        <div class="col-33">
+          <span ng-click="edit = !edit" ng-show="!edit" ng-bind="holiday.name"></span>
+          <input class="input" type="text" placeholder="Name" ng-model='holiday.name' name='name' ng-show="edit">
+        </div>
+        <div class="col">
+          <span ng-click="edit = !edit" ng-show="!edit" ng-bind='holiday.date | date: "MM/dd/yyyy"'></span>
+          <label class="item-input no-padding">
+            <input class="input" type="date" placeholder="Date" ng-model='holiday.date' name="date" ng-show="edit">
+          </label>
+        </div>
+        <div class="col-10">
+          <button type="submit" class="button icon ion-checkmark-circled button-clear button-balanced"
+            ng-show="edit" ng-click="edit = !edit; update(holiday.id, holiday)">
+          </button>
+        </div>
+        <div class="col-10">
+          <button class="button icon ion-minus-circled button-clear button-assertive" ng-click="delete(holiday.id, $index)"></button>
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

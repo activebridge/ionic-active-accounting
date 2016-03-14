@@ -5,7 +5,7 @@
 
         <div class="assertive">{{ hour.errors.customer_id[0] }}</div>
         <label class="item item-select">
-          <select class="customer-select" ng-model="hour.customer_id" ng-options="customer.id as customer.name for customer in customers" required>
+          <select class="select" ng-model="hour.customer_id" ng-options="customer.id as customer.name for customer in customers" required>
             <option value="">Not selected</option>
           </select>
         </label>
@@ -34,7 +34,7 @@
         <div class="col" ng-bind="hour.customer.name"></div>
         <div class="col">
           <span ng-click="edit = !edit" ng-show="!edit" ng-bind="hour.hours"></span>
-          <input class="hours-input" type="number" placeholder="Hours" ng-model='hour.hours' ng-show="edit" mix='0' max='999'>
+          <input class="input" type="number" placeholder="Hours" ng-model='hour.hours' ng-show="edit" mix='0' max='999'>
         </div>
         <div class="col" ng-bind="hour.month"></div>
         <div class="col">

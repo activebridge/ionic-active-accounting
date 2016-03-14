@@ -16,6 +16,9 @@ app.controller 'HoursCtrl', [
       $scope.getWorkingDays($scope.hour.month)
       $scope.$watch 'workingDays', (value) ->
         $scope.hour.hours = $scope.getWorkingHours()
+      $scope.$watch 'datePickerValue', (value) ->
+        if value
+          $scope.hour.month = value.getMonth() + 1 + "/" + value.getFullYear()
       $scope.vendor = $localStorage.currentVendor
       $scope.hour.customer_id = $scope.vendor.customer_id
       $scope.customers = Counterparty.customers(scope: 'active')

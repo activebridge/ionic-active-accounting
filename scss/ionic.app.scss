@@ -29,14 +29,14 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
   direction: rtl;
 }
 
-select.customer-select {
+select.select {
   direction: ltr;
   max-width: 100%;
   width: 100%;
 }
 
-input.hours-input {
-  padding: 0;
+input.input {
+  padding: 0px !important;
   width: 100%;
 }
 
@@ -61,4 +61,12 @@ input.hours-input {
     border-color: #ccc;
     background-color: #D9D9D9;
   }
+}
+
+.no-padding {
+  padding: 0px;
+}
+
+.font-size-14 {
+  font-size: 14px;
 }
