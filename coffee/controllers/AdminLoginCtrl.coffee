@@ -6,7 +6,11 @@ app.controller 'AdminLoginCtrl', [
   '$localStorage'
   ($scope, $state, Auth, $ionicPopup, $localStorage) ->
 
-    $scope.admin = {}
+    $scope.redirectLoggedUser = ->
+      if $localStorage.currentVendor
+        $state.go 'vendor-profile.hours'
+      if $localStorage.currentAdmin
+        $state.go 'admin.register'
 
     $scope.submit = ->
       config = headers: 'X-HTTP-Method-Override': 'POST'
@@ -19,4 +23,10 @@ app.controller 'AdminLoginCtrl', [
           title: 'Login failed!'
           template: 'Please check your credentials!'
         )
+
+    init = ->
+      $scope.admin = {}
+      $scope.redirectLoggedUser()
+
+    init()
 ]
