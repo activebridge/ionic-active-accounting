@@ -167,3 +167,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       loginRequired: adminLoginRequired
     cache: false
   }
+  .state 'admin.reports', {
+    url: '/reports'
+    views: 'reports-tab':
+      templateUrl: 'templates/reports.html'
+      controller: 'ReportsCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+    cache: false
+  }
