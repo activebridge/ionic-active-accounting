@@ -1,0 +1,13 @@
+<ion-view view-title="Management own hours">
+  <ion-content class="padding">
+
+    <div class="list list-inset">
+      <div ng-include src="'templates/hours_form.html'"></div>
+    </div>
+
+    <div class="list">
+      <div class="row row-center" ng-include="'templates/hours.html'" ng-repeat="hour in hours" \>
+    </div>
+
+  </ion-content>
+</ion-view>

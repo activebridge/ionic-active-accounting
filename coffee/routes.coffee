@@ -37,7 +37,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   .state 'vendor-profile.hours', {
     url: '/hours'
     views: 'hours-tab':
-      templateUrl: 'templates/hours.html'
+      templateUrl: 'templates/vendor_hours.html'
       controller: 'HoursCtrl'
     resolve:
       loginRequired: vendorLoginRequired
@@ -154,6 +154,15 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     views: 'article-tab':
       templateUrl: 'templates/article-detail.html'
       controller: 'ArticleDetailCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+    cache: false
+  }
+  .state 'admin.hours', {
+    url: '/report_hours'
+    views: 'hours-tab':
+      templateUrl: 'templates/admin_hours.html'
+      controller: 'AdminHoursCtrl'
     resolve:
       loginRequired: adminLoginRequired
     cache: false
