@@ -1,0 +1,30 @@
+<ion-view view-title="Management hours">
+  <ion-content class="padding">
+    <label class="item item-select">
+      <select class="select" ng-model="current.month" ng-options="month.value as month.text for month in months" ng-change="getHours(current.month)">
+      </select>
+    </label>
+
+    <div class="list list-inset">
+
+      <div class="assertive">{{ hour.errors.vendor_id[0] }}</div>
+      <label class="item item-select">
+        <select class="select" ng-model="hour.vendor_id" ng-options="vendor.id as vendor.name for vendor in vendors" required>
+          <option value="">select vendor</option>
+        </select>
+      </label>
+
+      <div ng-include src="'templates/hours_form.html'"></div>
+    </div>
+
+    <div class="list">
+      <div class="row row-center" ng-repeat="hour in hours">
+        <div class="col-20" ng-bind="hour.vendor"></div>
+        <div class="col-80">
+          <div class="row row-center" ng-include src="'templates/hours.html'"></div>
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

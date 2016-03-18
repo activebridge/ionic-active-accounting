@@ -1,0 +1,20 @@
+<div class="assertive">{{ hour.errors.customer_id[0] }}</div>
+<label class="item item-select">
+  <select class="select" ng-model="hour.customer_id" ng-options="customer.id as customer.name for customer in customers" required>
+    <option value="">select customer</option>
+  </select>
+</label>
+
+<div class="assertive">{{ hour.errors.hours[0] }}</div>
+<label class="item item-input">
+  <input type="number" placeholder="Hours" ng-model='hour.hours' name='hours' mix='0' max='999' required>
+</label>
+
+<div class="assertive">{{ hour.errors.month[0] }}</div>
+<label class="item item-input">
+  <input type="date" placeholder="Month" ng-model="hour.month" name="month" ng-change="workDays(hour.month)" required>
+</label>
+
+<button type="submit" ng-click='add()' class="button button-block button-calm">
+  Add
+</button>

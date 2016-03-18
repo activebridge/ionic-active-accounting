@@ -35,13 +35,17 @@ app.factory 'Counterparty', ['$resource', 'apiEndpoint', ($resource, apiEndpoint
     method: 'PUT'
 ]
 
-app.factory 'WorkDay', ['$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
-  $resource apiEndpoint + '/work_days/'
+app.factory 'WorkDay', [
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/work_days/'
 ]
 
-app.factory 'Holiday', ['$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
-  $resource apiEndpoint + '/holidays/:id/:action',
-    id: '@id'
-  , update:
-    method: 'PUT'
+app.factory 'Holiday', [
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/holidays/:id/:action', {id: '@id'}, update: method: 'PUT'
+]
+
+app.factory 'ReportHours', [
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/report_hours/:id'
 ]
