@@ -23,16 +23,17 @@ app.factory 'Hours', [
     $resource apiEndpoint + '/hours/:id/:action', {id: '@id'}, update: method: 'PUT'
 ]
 
-app.factory 'Counterparty', ['$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
-  $resource apiEndpoint + '/counterparties/:id/:action',
-    id: '@id'
-  , customers:
-    method: 'GET',
-    params:
-      action: 'customers'
-    isArray: true
-  , update:
-    method: 'PUT'
+app.factory 'Counterparty', [
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/counterparties/:id/:action',
+      id: '@id'
+    , customers:
+      method: 'GET',
+      params:
+        action: 'customers'
+      isArray: true
+    , update:
+      method: 'PUT'
 ]
 
 app.factory 'WorkDay', [
@@ -48,4 +49,17 @@ app.factory 'Holiday', [
 app.factory 'ReportHours', [
   '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
     $resource apiEndpoint + '/report_hours/:id'
+]
+
+app.factory 'Report', [
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/reports/:id/:action',
+      id: '@id'
+    , years:
+      method: 'GET',
+      params:
+        action: 'years'
+      isArray: false
+    , update:
+      method: 'PUT'
 ]

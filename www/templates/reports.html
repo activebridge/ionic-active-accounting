@@ -1,0 +1,112 @@
+<ion-view view-title="Reports">
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-select">
+        <select class="select" ng-model="current.year" ng-options="year as year for year in years track by year" ng-change="loadReports()">
+        </select>
+      </label>
+
+      <label class="item item-select">
+        <select class="select" ng-model="current.month" ng-options="month.value as month.text for month in months" ng-change="loadReports()">
+        </select>
+      </label>
+    </div>
+
+    <div class='row row-center no-padding bold'>
+      <div class='col'>Revenue</div>
+      <div class='col col-33 col-right' ng-bind="totalRevenue[index]"></div>
+    </div>
+    <div ng-repeat='revenue in revenues'>
+      <div class="row row-center no-padding">
+        <div class='col col-offset-10'>
+          <div class="icon" ng-click="show = !show" ng-class="show ? 'ion-minus' : 'ion-plus'" ng-bind='revenue.article'></div>
+        </div>
+        <div class='col col-33 col-right'>
+          <div ng-bind='revenue.values[index]'></div>
+        </div>
+      </div>
+      <div class="row row-center no-padding" ng-show="show">
+        <div class='col col-offset-20 balanced'>
+          <div ng-bind="counterparty.counterparty" ng-repeat='counterparty in revenue.counterparties'></div>
+        </div>
+        <div class='col col-33 col-right balanced'>
+          <div ng-bind="counterparty.values[index]" ng-repeat='counterparty in revenue.counterparties'></div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row row-center no-padding bold'>
+      <div class='col'>Cost</div>
+      <div class='col col-33 col-right' ng-bind="totalCost[index]"></div>
+    </div>
+    <div ng-repeat='cost in costs'>
+      <div class="row row-center no-padding">
+        <div class='col col-offset-10'>
+          <div class="icon" ng-click="show = !show" ng-class="show ? 'ion-minus' : 'ion-plus'" ng-bind='cost.article'></div>
+        </div>
+        <div class='col col-33 col-right'>
+          <div ng-bind='cost.values[index]'></div>
+        </div>
+      </div>
+      <div class="row row-center no-padding" ng-show="show">
+        <div class='col col-offset-20 assertive'>
+          <div ng-bind="counterparty.counterparty" ng-repeat='counterparty in cost.counterparties'></div>
+        </div>
+        <div class='col col-33 col-right assertive'>
+          <div ng-bind="counterparty.values[index]" ng-repeat='counterparty in cost.counterparties'></div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row row-center no-padding bold'>
+      <div class='col'>Translation</div>
+      <div class='col col-33 col-right' ng-bind="totalTranslation[index]"></div>
+    </div>
+    <div ng-repeat='translation in translations'>
+      <div class="row row-center no-padding">
+        <div class='col col-offset-10'>
+          <div class="icon" ng-click="show = !show" ng-class="show ? 'ion-minus' : 'ion-plus'" ng-bind='translation.article'></div>
+        </div>
+        <div class='col col-33 col-right'>
+          <div ng-bind='translation.values[index]'></div>
+        </div>
+      </div>
+      <div class="row row-center no-padding" ng-show="show">
+        <div class='col col-offset-20 royal'>
+          <div ng-bind="counterparty.counterparty" ng-repeat='counterparty in translation.counterparties'></div>
+        </div>
+        <div class='col col-33 royal col-right'>
+          <div ng-bind="counterparty.values[index]" ng-repeat='counterparty in translation.counterparties'></div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row row-center no-padding bold'>
+      <div class='col'>Loan</div>
+      <div class='col col-33 col-right' ng-bind="totalLoan[index]"></div>
+    </div>
+    <div ng-repeat='loan in loans'>
+      <div class="row row-center no-padding">
+        <div class='col col-offset-10'>
+          <div class="icon" ng-click="show = !show" ng-class="show ? 'ion-minus' : 'ion-plus'" ng-bind='loan.article'></div>
+        </div>
+        <div class='col col-33 col-right'>
+          <div ng-bind='loan.values[index]'></div>
+        </div>
+      </div>
+      <div class="row row-center no-padding" ng-show="show">
+        <div class='col col-offset-20'>
+          <div ng-bind="counterparty.counterparty" ng-repeat='counterparty in loan.counterparties'></div>
+        </div>
+        <div class='col col-33 col-right'>
+          <div ng-bind="counterparty.values[index]" ng-repeat='counterparty in loan.counterparties'></div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row row-center no-padding bold'>
+      <div class='col'>Profit</div>
+      <div class='col col-33 col-right' ng-bind="(totalRevenue[index] - totalCost[index]).toFixed(2)"></div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,20 +1,13 @@
 app.controller 'ArticleCtrl', [
   '$scope'
   'Article'
-  ($scope, Article) ->
-
+  'toggleDecorator'
+  ($scope, Article, toggleDecorator) ->
+    toggleDecorator($scope)
+    
     $scope.loadArticles = ->
       Article.query (response) ->
         $scope.articles = response
-
-    $scope.toggleGroup = (group) ->
-      if $scope.isGroupShown(group)
-        $scope.shownGroup = null
-      else
-        $scope.shownGroup = group
-
-    $scope.isGroupShown = (group) ->
-      $scope.shownGroup == group
 
     init = ->
       $scope.revenues = {}

@@ -1,20 +1,13 @@
 app.controller 'CounterpartyCtrl', [
   '$scope'
   'Counterparty'
-  ($scope, Counterparty) ->
+  'toggleDecorator'
+  ($scope, Counterparty, toggleDecorator) ->
+    toggleDecorator($scope)
 
     $scope.loadCounterparties = ->
       Counterparty.query (response) ->
         $scope.counterparties = response
-
-    $scope.toggleGroup = (group) ->
-      if $scope.isGroupShown(group)
-        $scope.shownGroup = null
-      else
-        $scope.shownGroup = group
-
-    $scope.isGroupShown = (group) ->
-      $scope.shownGroup == group
 
     init = ->
       $scope.customers = {}
