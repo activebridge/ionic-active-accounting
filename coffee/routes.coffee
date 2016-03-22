@@ -176,3 +176,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       loginRequired: adminLoginRequired
     cache: false
   }
+  .state 'admin.holidays', {
+    url: '/our-holidays'
+    views: 'holidays-tab':
+      templateUrl: 'templates/admin_holidays.html'
+      controller: 'HolidaysCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+    cache: false
+  }
