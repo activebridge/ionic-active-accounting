@@ -185,3 +185,12 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
       loginRequired: adminLoginRequired
     cache: false
   }
+  .state 'admin.charts', {
+    url: '/charts'
+    views: 'charts-tab':
+      templateUrl: 'templates/charts.html'
+      controller: 'ChartsCtrl'
+    resolve:
+      loginRequired: adminLoginRequired
+    cache: false
+  }

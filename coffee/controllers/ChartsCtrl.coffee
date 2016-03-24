@@ -1,0 +1,46 @@
+app.controller 'ChartsCtrl', [
+  '$scope'
+  'Chart'
+  'Register'
+  ($scope, Chart, Register) ->
+    init = ->
+      $scope.current = {}
+      $scope.current.year = new Date().getFullYear()
+      $scope.barChartData = []
+      $scope.lineChartData = []
+      $scope.months = moment.months()
+      $scope.series = ['Revenue', 'Cost', 'Profit', 'Translation', 'Loan']
+      loadYears()
+
+    loadYears = ->
+      Chart.years (response) ->
+        $scope.years = response['charts']
+        $scope.load($scope.current.year)
+
+    $scope.load = (year) ->
+      $scope.data = Chart.query
+        year: year,
+        (response) ->
+          console.log response
+          revenueData     = [0,0,0,0,0,0,0,0,0,0,0,0]
+          costData        = [0,0,0,0,0,0,0,0,0,0,0,0]
+          translationData = [0,0,0,0,0,0,0,0,0,0,0,0]
+          profitData      = [0,0,0,0,0,0,0,0,0,0,0,0]
+          loanData        = [0,0,0,0,0,0,0,0,0,0,0,0]
+          lineData        = [0,0,0,0,0,0,0,0,0,0,0,0]
+
+          for key in response
+            index = key.month - 1
+            revenueData[index] = key.revenue
+            profitData[index] = key.profit
+            translationData[index] = key.translation
+            costData[index] = key.cost
+            loanData[index] = key.loan
+            unless key.revenue == 0
+              lineData[index] = parseFloat(Math.round(((key.revenue - key.cost) * 100) / key.revenue).toFixed(2))
+
+          $scope.lineChartData = [lineData]
+          $scope.barChartData = [revenueData, costData, profitData, translationData, loanData]
+
+    init()
+]

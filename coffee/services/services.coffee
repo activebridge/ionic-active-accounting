@@ -63,3 +63,14 @@ app.factory 'Report', [
     , update:
       method: 'PUT'
 ]
+
+app.factory 'Chart', [
+  '$resource', 'apiEndpoint', ($resource, apiEndpoint) ->
+    $resource apiEndpoint + '/charts/:id/:action',
+      id: '@id'
+    , years:
+      method: 'GET',
+      params:
+        action: 'years'
+      isArray: false
+]
