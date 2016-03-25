@@ -1,0 +1,20 @@
+<ion-view view-title="Charts">
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-select">
+        <select class="select" ng-model="current.year" ng-options="year as year for year in years" ng-change="load(current.year)">
+        </select>
+      </label>
+    </div>
+
+    <div class="card">
+      <canvas id="line" class="chart chart-bar" chart-data="barChartData" chart-labels="months" chart-legend="true" chart-series="series">
+      </canvas>
+    </div>
+
+    <div class="card">
+      <canvas id="line" class="chart chart-line" chart-data="lineChartData" chart-labels="months">
+      </canvas>
+    </div>
+  </ion-content>
+</ion-view>

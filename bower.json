@@ -11,7 +11,9 @@
     "AngularDevise": "angular-devise#^1.2.1",
     "ngstorage": "^0.3.10",
     "angular-moment": "^0.10.3",
-    "moment": "^2.11.2"
+    "moment": "^2.11.2",
+    "Chart.js": "^1.0.2",
+    "angular-chart.js": "^0.9.0"
   },
   "resolutions": {
     "angular": "1.5.0",
