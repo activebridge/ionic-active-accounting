@@ -36,7 +36,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'vendor-profile.hours', {
     url: '/hours'
-    views: 'hours-tab':
+    views: 'vendorContent':
       templateUrl: 'templates/vendor_hours.html'
       controller: 'HoursCtrl'
     resolve:
@@ -45,7 +45,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'vendor-profile.calc', {
     url: '/calc'
-    views: 'calc-tab':
+    views: 'vendorContent':
       templateUrl: 'templates/calc.html'
       controller: 'CalcCtrl'
     resolve:
@@ -54,8 +54,8 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'vendor-profile.holidays', {
     url: '/our-holidays'
-    views: 'holidays-tab':
-      templateUrl: 'templates/holidays.html'
+    views: 'vendorContent':
+      templateUrl: 'templates/vendor_holidays.html'
       controller: 'HolidaysCtrl'
     resolve:
       loginRequired: vendorLoginRequired
@@ -79,7 +79,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.register', {
     url: '/register'
-    views: 'register-tab':
+    views: 'adminContent':
       templateUrl: 'templates/register.html'
       controller: 'RegisterCtrl'
     resolve:
@@ -88,7 +88,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.register-new', {
     url: '/register/new'
-    views: 'register-tab':
+    views: 'adminContent':
       templateUrl: 'templates/register-new.html'
       controller: 'RegisterNewCtrl'
     resolve:
@@ -97,7 +97,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.register-detail', {
     url: '/register/:registerId'
-    views: 'register-tab':
+    views: 'adminContent':
       templateUrl: 'templates/register-detail.html'
       controller: 'RegisterDetailCtrl'
     resolve:
@@ -106,7 +106,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.counterparty', {
     url: '/counterparty'
-    views: 'counterparty-tab':
+    views: 'adminContent':
       templateUrl: 'templates/counterparty.html'
       controller: 'CounterpartyCtrl'
     resolve:
@@ -115,7 +115,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.counterparty-new', {
     url: '/counterparty/new'
-    views: 'counterparty-tab':
+    views: 'adminContent':
       templateUrl: 'templates/counterparty-new.html'
       controller: 'CounterpartyNewCtrl'
     resolve:
@@ -124,7 +124,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.counterparty-detail', {
     url: '/counterparty/:counterpartyId'
-    views: 'counterparty-tab':
+    views: 'adminContent':
       templateUrl: 'templates/counterparty-detail.html'
       controller: 'CounterpartyDetailCtrl'
     resolve:
@@ -133,16 +133,16 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.article', {
     url: '/articles'
-    views: 'article-tab':
+    views: 'adminContent':
       templateUrl: 'templates/article.html'
       controller: 'ArticleCtrl'
-    resolve:
+    resolve: 'adminContent':
       loginRequired: adminLoginRequired
     cache: false
   }
   .state 'admin.article-new', {
     url: '/article/new'
-    views: 'article-tab':
+    views:
       templateUrl: 'templates/article-new.html'
       controller: 'ArticleNewCtrl'
     resolve:
@@ -151,7 +151,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.article-detail', {
     url: '/article/:articleId'
-    views: 'article-tab':
+    views: 'adminContent':
       templateUrl: 'templates/article-detail.html'
       controller: 'ArticleDetailCtrl'
     resolve:
@@ -160,7 +160,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.hours', {
     url: '/report_hours'
-    views: 'hours-tab':
+    views: 'adminContent':
       templateUrl: 'templates/admin_hours.html'
       controller: 'AdminHoursCtrl'
     resolve:
@@ -169,7 +169,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.reports', {
     url: '/reports'
-    views: 'reports-tab':
+    views: 'adminContent':
       templateUrl: 'templates/reports.html'
       controller: 'ReportsCtrl'
     resolve:
@@ -177,8 +177,8 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
     cache: false
   }
   .state 'admin.holidays', {
-    url: '/our-holidays'
-    views: 'holidays-tab':
+    url: '/holidays'
+    views: 'adminContent':
       templateUrl: 'templates/admin_holidays.html'
       controller: 'HolidaysCtrl'
     resolve:
@@ -187,7 +187,7 @@ app.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
   }
   .state 'admin.charts', {
     url: '/charts'
-    views: 'charts-tab':
+    views: 'adminContent':
       templateUrl: 'templates/charts.html'
       controller: 'ChartsCtrl'
     resolve:

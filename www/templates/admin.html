@@ -1,32 +1,47 @@
-  <ion-tabs class="tabs-icon-top tabs-stable">
-    <ion-tab title="Контрагенти" icon="ion-person" ui-sref="admin.counterparty">
-      <ion-nav-view name="counterparty-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Статті" icon="ion-ios-book" ui-sref="admin.article">
-      <ion-nav-view name="article-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Реєстр" icon="ion-wrench" ui-sref="admin.register">
-      <ion-nav-view name="register-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Графіки" icon="ion-pie-graph" ui-sref="admin.charts">
-      <ion-nav-view name="charts-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Години" icon="ion-clock" ui-sref="admin.hours">
-      <ion-nav-view name="hours-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Свята" icon="ion-home" ui-sref="admin.holidays">
-      <ion-nav-view name="holidays-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Звіти" icon="ion-document-text" ui-sref="admin.reports">
-      <ion-nav-view name="reports-tab"></ion-nav-view>
-    </ion-tab>
-
-    <ion-tab title="Вихід" icon="ion-log-out" ng-click="logout()">
-    </ion-tab>
-  </ion-tabs>
+<ion-side-menus>
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button class="button-clear">
+        <i class="ion-arrow-left-c"></i> Back
+      </ion-nav-back-button>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="adminContent"></ion-nav-view>
+  </ion-side-menu-content>
+  <ion-side-menu side="left">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Navigation</h1>
+    </ion-header-bar>
+    <ion-content has-header="true">
+      <ion-list>
+        <ion-item nav-clear menu-close ui-sref="admin.counterparty" class="item item-icon-left">
+          <i class="icon ion-person"></i>Контрагенти
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="admin.article" class="item item-icon-left">
+          <i class="icon ion-ios-book"></i>Статті
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="admin.register" class="item item-icon-left">
+          <i class="icon ion-wrench"></i>Реєстр
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="admin.charts" class="item item-icon-left">
+          <i class="icon ion-pie-graph"></i>Графіки
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="admin.hours" class="item item-icon-left">
+          <i class="icon ion-clock"></i>Години
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="admin.holidays" class="item item-icon-left">
+          <i class="icon ion-home"></i>Свята
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="admin.reports" class="item item-icon-left">
+          <i class="icon ion-document-text"></i>Звіти
+        </ion-item>
+        <ion-item nav-clear menu-close class="item item-icon-left" ng-click="logout()">
+          <i class="icon ion-log-out"></i>Вихід
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
