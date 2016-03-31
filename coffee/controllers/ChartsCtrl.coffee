@@ -9,7 +9,7 @@ app.controller 'ChartsCtrl', [
       $scope.barChartData = []
       $scope.lineChartData = []
       $scope.months = moment.months()
-      $scope.series = ['Revenue', 'Cost', 'Profit', 'Translation', 'Loan']
+      $scope.series = ['Revenue', 'Cost', 'Profit']
       loadYears()
 
     loadYears = ->
@@ -23,9 +23,7 @@ app.controller 'ChartsCtrl', [
         (response) ->
           revenueData     = [0,0,0,0,0,0,0,0,0,0,0,0]
           costData        = [0,0,0,0,0,0,0,0,0,0,0,0]
-          translationData = [0,0,0,0,0,0,0,0,0,0,0,0]
           profitData      = [0,0,0,0,0,0,0,0,0,0,0,0]
-          loanData        = [0,0,0,0,0,0,0,0,0,0,0,0]
           lineData        = [0,0,0,0,0,0,0,0,0,0,0,0]
 
           for key in response
@@ -34,9 +32,8 @@ app.controller 'ChartsCtrl', [
             count = 0
             revenueData[index] = key.revenue
             profitData[index] = key.profit
-            translationData[index] = key.translation
             costData[index] = key.cost
-            loanData[index] = key.loan
+            
             unless key.revenue == 0 && key.cost == 0
               lineData[index] = parseFloat(Math.round(((key.revenue - key.cost) * 100) / key.revenue).toFixed(2))
               $scope.average += lineData[index]
@@ -44,7 +41,7 @@ app.controller 'ChartsCtrl', [
 
           $scope.average /= count
           $scope.lineChartData = [lineData]
-          $scope.barChartData = [revenueData, costData, profitData, translationData, loanData]
+          $scope.barChartData = [revenueData, costData, profitData]
 
     init()
 ]
